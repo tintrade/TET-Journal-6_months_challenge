@@ -204,12 +204,18 @@
             display: flex;
             border-radius: 50px;
             border: 1px solid var(--neutral-btn-border);
-            width: 60px;
+            width: 120px; /* MODIFIED for text */
             height: 25px;
             overflow: hidden;
             position: relative;
             cursor: pointer;
             margin-right: 10px;
+        }
+        
+        .three-state-button[data-type="yn"],
+        .three-state-button[data-type="pn"],
+        .three-state-button[data-type="ls"] {
+            width: 60px;
         }
 
         .three-state-button .button-overlay {
@@ -223,27 +229,31 @@
         .three-state-button.checked .button-overlay { background-color: var(--checked-state-color); }
         .three-state-button.unchecked .button-overlay { background-color: var(--unchecked-state-color); }
 
-        .three-state-button .icon {
+        .three-state-button .button-content { /* REFACTORED */
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.2em;
             font-weight: bold;
             color: var(--icon-color);
             z-index: 2;
+            transition: opacity 0.2s;
         }
+        .three-state-button .button-content.icon { font-size: 1.2em; }
+        .three-state-button .button-content.text { font-size: 0.8em; text-transform: uppercase; }
+
+        .three-state-button[data-type="np"] .text-negative { color: var(--unchecked-state-color); }
+        .three-state-button[data-type="np"] .text-positive { color: var(--checked-state-color); }
         
-        .three-state-button[data-type="yn"].checked .icon-cross,
-        .three-state-button[data-type="pn"].checked .icon-minus,
-        .three-state-button[data-type="ls"].checked .icon-short { opacity: 0; }
+        /* REFACTORED: Generic rules for showing/hiding options */
+        .three-state-button.checked .is-unchecked-option { opacity: 0; }
+        .three-state-button.unchecked .is-checked-option { opacity: 0; }
 
-        .three-state-button[data-type="yn"].unchecked .icon-check,
-        .three-state-button[data-type="pn"].unchecked .icon-plus,
-        .three-state-button[data-type="ls"].unchecked .icon-long { opacity: 0; }
-
-        .three-state-button.checked .icon,
-        .three-state-button.unchecked .icon { color: white; }
+        /* REFACTORED: Generic rule for selected option color */
+        .three-state-button.checked .button-content,
+        .three-state-button.unchecked .button-content {
+            color: white;
+        }
         
         .dropdown, .char-input, .char-input-long, #comments-input, .money-input, .leverage-input, #template-name-input, #template-select {
             margin-right: 10px;
@@ -843,9 +853,9 @@
             'UTC-12: International Date Line West'
         ]},
         // Pre-Trade
-        { text: "Instrument", type: "32char", deletable: true },
-        { text: "Macro Market", type: "pn", deletable: true }, 
-        { text: "News", type: "pn", deletable: true },
+        { text: "Instrument / Pairs", type: "32char", deletable: true },
+        { text: "Macro Market", type: "np", deletable: true }, 
+        { text: "News", type: "np", deletable: true },
         { text: "Session", type: "dd", deletable: true, options: ["New York", "Asia", "London"] },
         { text: "Levels", type: "yn", deletable: true },
         // Mid-Trade
@@ -1106,9 +1116,30 @@
         const onChangeHandler = `onchange="updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"`;
 
         switch(type) {
-            case 'yn': controlHtml = `<div class="three-state-button" data-type="yn" data-state="neutral"><div class="icon icon-cross">×</div><div class="icon icon-check">✓</div><div class="button-overlay"></div></div>`; break;
-            case 'pn': controlHtml = `<div class="three-state-button" data-type="pn" data-state="neutral"><div class="icon icon-minus">-</div><div class="icon icon-plus">+</div><div class="button-overlay"></div></div>`; break;
-            case 'ls': controlHtml = `<div class="three-state-button" data-type="ls" data-state="neutral"><div class="icon icon-short">S</div><div class="icon icon-long">L</div><div class="button-overlay"></div></div>`; break;
+            case 'yn': 
+                controlHtml = `<div class="three-state-button" data-type="yn" data-state="neutral" role="button" tabindex="0">
+                    <span class="button-content icon is-unchecked-option">×</span>
+                    <span class="button-content icon is-checked-option">✓</span>
+                    <div class="button-overlay"></div></div>`; 
+                break;
+            case 'pn': 
+                controlHtml = `<div class="three-state-button" data-type="pn" data-state="neutral" role="button" tabindex="0">
+                    <span class="button-content icon is-unchecked-option">-</span>
+                    <span class="button-content icon is-checked-option">+</span>
+                    <div class="button-overlay"></div></div>`; 
+                break;
+            case 'np': 
+                controlHtml = `<div class="three-state-button" data-type="np" data-state="neutral" role="button" tabindex="0">
+                    <span class="button-content text text-negative is-unchecked-option">negative</span>
+                    <span class="button-content text text-positive is-checked-option">positive</span>
+                    <div class="button-overlay"></div></div>`; 
+                break;
+            case 'ls': 
+                controlHtml = `<div class="three-state-button" data-type="ls" data-state="neutral" role="button" tabindex="0">
+                    <span class="button-content icon is-unchecked-option">S</span>
+                    <span class="button-content icon is-checked-option">L</span>
+                    <div class="button-overlay"></div></div>`; 
+                break;
             case 'dd':
                 let optionsHtml = '<option value=""></option>';
                 const defaultDdOptions = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10];
@@ -1144,7 +1175,7 @@
         };
         Object.values(groupContainers).forEach(c => c.innerHTML = '');
 
-        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument');
+        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs');
         const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Trend') - personalInfoCount;
         const midTradeCount = defaultTemplate.findIndex(item => item.text === 'RSI') - (personalInfoCount + preTradeCount);
         const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Leverage') - (personalInfoCount + preTradeCount + midTradeCount);
@@ -1197,13 +1228,17 @@
             const charInput = item.querySelector('.char-input, .char-input-long');
             const moneyContainer = item.querySelector('.money-input-container');
             const leverageInput = item.querySelector('.leverage-input');
-            if (btn) type = btn.dataset.type;
-            else if (dropdown) type = 'dd';
-            else if (charInput) {
+            if (btn) {
+                type = btn.dataset.type;
+            } else if (dropdown) { 
+                type = 'dd';
+            } else if (charInput) {
                 type = charInput.classList.contains('char-input-long') ? '32char' : '7char';
+            } else if (moneyContainer) {
+                type = 'money';
+            } else if (leverageInput) {
+                type = 'leverage';
             }
-            else if (moneyContainer) type = 'money';
-            else if (leverageInput) type = 'leverage';
             structure.push({ text, type, deletable });
         });
         return structure;
@@ -1442,7 +1477,8 @@
         const listContent = document.getElementById('summary-text').value;
         const commentsText = document.getElementById('comments-input').value.trim();
         const now = new Date();
-        const contentTimestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now);
+        const contentTimestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dayName} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
         
         const headerLines = [
             "Trade No:", `Position opening: ${contentTimestamp}`, "Position closing:",
@@ -1618,11 +1654,14 @@
             } else if (itemButton && itemButton.dataset.type === 'ls') {
                 const state = itemButton.dataset.state;
                 if (state === 'checked') { value = "Long"; } else if (state === 'unchecked') { value = "Short"; }
-            } else if (dropdown) {
-                value = dropdown.value;
+            } else if (itemButton && itemButton.dataset.type === 'np') {
+                const state = itemButton.dataset.state;
+                if (state === 'checked') { value = "positive"; } else if (state === 'unchecked') { value = "negative"; }
             } else if (itemButton && itemButton.dataset.type === 'pn') {
                 const state = itemButton.dataset.state;
                 if (state === 'checked') { value = "+"; } else if (state === 'unchecked') { value = "-"; }
+            } else if (dropdown) {
+                value = dropdown.value;
             } else if (charInput) {
                 value = charInput.value;
             } else if (dollarsInput && centsInput) {
