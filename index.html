@@ -433,7 +433,6 @@
             line-height: 25px;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
         .template-row .file-upload-label { height: 35px; line-height: 35px; } 
 
@@ -644,7 +643,6 @@
                                     </div>
                                     <img class="screenshot-preview">
                                 </div>
-
                                 <div class="screenshot-row" data-key="limitOrder" tabindex="0">
                                     <div class="checklist-item">
                                         <span class="item-text">Limit Order Screenshot</span>
@@ -657,7 +655,6 @@
                                     </div>
                                     <img class="screenshot-preview">
                                 </div>
-
                                 <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
                                     <div class="checklist-item">
                                         <span class="item-text">Triggered Limit Order Screenshot</span>
@@ -670,7 +667,6 @@
                                     </div>
                                     <img class="screenshot-preview">
                                 </div>
-
                                 <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
                                     <div class="checklist-item">
                                         <span class="item-text">Executed Market Order Screenshot</span>
@@ -683,7 +679,6 @@
                                     </div>
                                     <img class="screenshot-preview">
                                 </div>
-
                                 <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
                                     <div class="checklist-item">
                                         <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
@@ -696,7 +691,6 @@
                                     </div>
                                     <img class="screenshot-preview">
                                 </div>
-                                
                                 <div class="screenshot-row" data-key="positionClosed" tabindex="0">
                                     <div class="checklist-item">
                                         <span class="item-text">Position Closed Screenshot</span>
@@ -1733,9 +1727,7 @@
             const input = row.querySelector('.screenshot-input');
             const pasteBtn = row.querySelector('.paste-button');
             const uploadLabel = row.querySelector('label');
-            
-            // Replaced the simple label listener with one for the new button-like label
-            uploadLabel.addEventListener('click', () => input.click());
+
             input.addEventListener('change', (e) => processImageFile(e.target.files[0], key));
             pasteBtn.addEventListener('click', () => pasteFromClipboard(key));
             row.addEventListener('paste', (e) => handlePasteEvent(e, key));
