@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Journal Entry</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #fcf5ee;
+            --container-bg: #f9ede0;
+            --text-color: #3e250b;
+            --secondary-text-color: #7d4916;
+            --border-color: #eec8a2;
+            --header-border-color: #9f5e1c;
+            --button-bg: #df974e;
+            --button-text-color: #fcf5ee;
+            --button-hover-bg: #c27223;
+            --copy-btn-bg: #5a3510;
+            --copy-btn-hover-bg: #301d09;
+            --action-btn-bg: #d77e26;
+            --action-btn-hover-bg: #bb6e21;
+            --delete-action-btn-bg: #91561a;
+            --delete-action-btn-hover-bg: #683d13;
+            --switch-track-bg: #e19b55;
+            --checked-state-color: #2ecc71;
+            --unchecked-state-color: #e74c3c;
+            --neutral-btn-border: #eec8a2;
+            --icon-color: #7d4916;
+            --delete-btn-color: #8a5219;
+            --delete-btn-hover-color: #5a3510;
+            --input-bg-color: #fbf1e7;
+            --ghost-bg-color: rgba(215, 126, 38, 0.3);
+        }
+
+        body.dark-mode {
+            --bg-color: #2c3e50;
+            --container-bg: #34495e;
+            --text-color: #ecf0f1;
+            --secondary-text-color: #bdc3c7;
+            --border-color: #566573;
+            --header-border-color: #ecf0f1;
+            --button-bg: #3498db;
+            --button-hover-bg: #2980b9;
+            --copy-btn-bg: #1abc9c;
+            --copy-btn-hover-bg: #16a085;
+            --action-btn-bg: #1abc9c;
+            --action-btn-hover-bg: #16a085;
+            --delete-action-btn-bg: #e74c3c;
+            --delete-action-btn-hover-bg: #c0392b;
+            --switch-track-bg: #566573;
+            --checked-state-color: #2ecc71;
+            --unchecked-state-color: #e74c3c;
+            --neutral-btn-border: #566573;
+            --icon-color: #bdc3c7;
+            --delete-btn-color: #95a5a6;
+            --delete-btn-hover-color: #ecf0f1;
+            --input-bg-color: #2c3e50;
+            --ghost-bg-color: rgba(26, 188, 156, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+        }
+
+        .app-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+        
+        .panel {
+            background-color: var(--container-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .content-column {
+            flex: 2;
+        }
+
+        .sidebar-column {
+            flex: 1;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 15px;
+        }
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--header-border-color);
+            margin-bottom: 10px;
+        }
+
+        .title-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .trade-group {
+            margin-bottom: 0;
+        }
+        .trade-group-header {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--secondary-text-color);
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+            margin: 15px 0 0 0;
+            font-style: italic;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .trade-group-header:first-of-type {
+            margin-top: 5px;
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-track-bg);
+            transition: .4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: #3498db; }
+        input:checked + .slider:before { transform: translateX(25px); }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            cursor: grab;
+        }
+        .checklist-item:last-child { border-bottom: none; }
+        
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: var(--ghost-bg-color);
+        }
+
+        .item-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text-color);
+            outline: none;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .three-state-button {
+            display: flex;
+            border-radius: 50px;
+            border: 1px solid var(--neutral-btn-border);
+            width: 60px;
+            height: 25px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .three-state-button .button-overlay {
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: var(--container-bg);
+            transition: background-color 0.3s;
+        }
+
+        .three-state-button.checked .button-overlay { background-color: var(--checked-state-color); }
+        .three-state-button.unchecked .button-overlay { background-color: var(--unchecked-state-color); }
+
+        .three-state-button .icon {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--icon-color);
+            z-index: 2;
+        }
+        
+        .three-state-button[data-type="yn"].checked .icon-cross,
+        .three-state-button[data-type="pn"].checked .icon-minus,
+        .three-state-button[data-type="ls"].checked .icon-short { opacity: 0; }
+
+        .three-state-button[data-type="yn"].unchecked .icon-check,
+        .three-state-button[data-type="pn"].unchecked .icon-plus,
+        .three-state-button[data-type="ls"].unchecked .icon-long { opacity: 0; }
+
+        .three-state-button.checked .icon,
+        .three-state-button.unchecked .icon { color: white; }
+        
+        .dropdown, .char-input, .char-input-long, #comments-input, .money-input, .leverage-input, #template-name-input, #template-select {
+            margin-right: 10px;
+            height: 25px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-size: 1em;
+            cursor: pointer;
+            outline: none;
+            padding: 0 5px;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        .char-input, .leverage-input { text-align: center; }
+        .char-input { width: 80px; }
+        .char-input-long { width: 200px; }
+        .leverage-input { width: 45px; }
+        
+        .money-input-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-right: 10px;
+        }
+
+        .money-input-container span { color: var(--text-color); font-weight: bold; }
+        .money-input { text-align: right; margin-right: 0; }
+        .money-input.dollars { width: 80px; }
+        .money-input.cents { width: 35px; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--delete-btn-color);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0 5px;
+            line-height: 1;
+            height: 25px;
+            display: flex;
+            align-items: center;
+        }
+        .delete-btn:hover { color: var(--delete-btn-hover-color); }
+        
+        #summary-text {
+            width: 100%; height: 150px; padding: 10px;
+            border: 1px solid var(--border-color); border-radius: 5px;
+            font-family: monospace; font-size: 1em; resize: vertical;
+            background-color: var(--input-bg-color); color: var(--text-color);
+        }
+
+        .summary-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .summary-actions button, .add-row-buttons button, .template-row button, .template-row .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between icon and text */
+        }
+
+        .summary-actions button svg, .add-row-buttons button svg, .template-row button svg, .template-row .file-upload-label svg {
+            width: 1em;
+            height: 1em;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .summary-actions button {
+            flex: 1;
+            padding: 10px;
+            background-color: var(--copy-btn-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .summary-actions button:hover { background-color: var(--copy-btn-hover-bg); }
+        
+        .comments-container { padding-top: 10px; }
+        #comments-input {
+            width: 100%; height: auto; font-family: inherit; padding: 8px;
+            resize: vertical; margin-right: 0;
+        }
+        
+        /* Sidebar Collapsible */
+        .collapsible-header {
+            margin: 0;
+            padding: 0 0 10px 0;
+            color: var(--text-color);
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapse-icon {
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out;
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            padding-top: 0;
+        }
+        .sidebar-section.active .collapsible-content {
+            max-height: 1000px; 
+            padding-top: 15px;
+        }
+        .sidebar-section.active .collapse-icon {
+            transform: rotate(45deg);
+        }
+        
+        /* Main Content Collapsible using CSS Grid */
+        .collapse-icon-main {
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out;
+            position: absolute;
+            right: 0;
+        }
+        .collapsible-content-main {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s ease-in-out;
+        }
+        .collapsible-inner-wrapper {
+            overflow: hidden;
+        }
+        .trade-group.active .collapsible-content-main {
+            grid-template-rows: 1fr;
+        }
+        .trade-group.active .trade-group-header {
+             margin-bottom: 5px;
+        }
+        .trade-group.active .collapse-icon-main {
+            transform: rotate(45deg);
+        }
+
+        .add-row-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .add-row-buttons button {
+            padding: 10px; background-color: var(--button-bg); color: var(--button-text-color);
+            border: none; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .add-row-buttons button:hover { background-color: var(--button-hover-bg); }
+
+        .template-row {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .template-row:last-child { margin-bottom: 0; }
+        .template-row input, .template-row select {
+            flex: 1;
+            margin-right: 0;
+            height: 35px;
+        }
+        .template-row button, .template-row .file-upload-label, .paste-button, .upload-button-label {
+            padding: 0 15px;
+            height: 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--button-text-color);
+            background-color: var(--action-btn-bg);
+            transition: background-color 0.2s;
+            font-size: 0.9em;
+            text-align: center;
+            line-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .template-row .file-upload-label { height: 35px; line-height: 35px; } 
+
+        .template-row button:hover, .template-row .file-upload-label:hover, .paste-button:hover, .upload-button-label:hover { background-color: var(--action-btn-hover-bg); }
+        
+        #delete-template-btn { background-color: var(--delete-action-btn-bg); }
+        #delete-template-btn:hover { background-color: var(--delete-action-btn-hover-bg); }
+        #upload-template-input, #merge-txt-input, #merge-pdf-input, #merge-pdfs-input { display: none; }
+        .screenshot-input { display: none; }
+        .full-width-label {
+            width: 100%;
+        }
+        .screenshot-preview {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .upload-controls-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        .paste-hint, .upload-separator {
+            font-size: 0.8em;
+            color: var(--secondary-text-color);
+            font-style: italic;
+        }
+
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .toast {
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideIn 0.5s forwards, fadeOut 0.5s 3.5s forwards;
+        }
+
+        .toast.success { background-color: var(--action-btn-bg); }
+        .toast.error { background-color: var(--delete-action-btn-bg); }
+        
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%); } }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .modal-content p {
+            margin-bottom: 20px;
+            color: var(--secondary-text-color);
+        }
+        #modal-input-container input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            font-size: 1em;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        #modal-cancel-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        #modal-cancel-btn:hover {
+            background-color: var(--border-color);
+        }
+        #modal-confirm-btn {
+            background-color: var(--delete-action-btn-bg);
+            color: var(--button-text-color);
+        }
+        #modal-confirm-btn:hover {
+            background-color: var(--delete-action-btn-hover-bg);
+        }
+
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; }
+            .sidebar-column { position: static; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="content-column panel">
+        <div id="capture-area">
+            <div class="header">
+                <span class="title-text">TRADING JOURNAL ENTRY</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div id="checklist-container">
+                <div class="trade-group active">
+                    <h3 class="trade-group-header">Personal Info <span class="collapse-icon-main">+</span></h3>
+                    <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="personal-info-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trade-group active">
+                    <h3 class="trade-group-header">Pre-Trade <span class="collapse-icon-main">+</span></h3>
+                     <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="pre-trade-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="trade-group active">
+                    <h3 class="trade-group-header">Mid-Trade <span class="collapse-icon-main">+</span></h3>
+                    <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="mid-trade-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="trade-group active">
+                    <h3 class="trade-group-header">Post-Trade <span class="collapse-icon-main">+</span></h3>
+                     <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="post-trade-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="trade-group active">
+                    <h3 class="trade-group-header">Screenshots <span class="collapse-icon-main">+</span></h3>
+                    <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="screenshots-items" class="checklist-group-items">
+                                <div class="screenshot-row" data-key="preTrade" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Pre-Trade Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-preTrade" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-preTrade" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+
+                                <div class="screenshot-row" data-key="limitOrder" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Limit Order Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-limitOrder" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-limitOrder" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+
+                                <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Triggered Limit Order Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+
+                                <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Executed Market Order Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+
+                                <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-slTpAdjusted" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-slTpAdjusted" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+                                
+                                <div class="screenshot-row" data-key="positionClosed" tabindex="0">
+                                    <div class="checklist-item">
+                                        <span class="item-text">Position Closed Screenshot</span>
+                                        <div class="upload-controls-container">
+                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                            <label for="screenshot-input-positionClosed" class="upload-button-label">Upload File</label>
+                                        </div>
+                                        <input type="file" id="screenshot-input-positionClosed" class="screenshot-input" accept="image/*">
+                                    </div>
+                                    <img class="screenshot-preview">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="trade-group active">
+                    <h3 class="trade-group-header">Review Notes <span class="collapse-icon-main">+</span></h3>
+                    <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="review-notes-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments-container">
+                <textarea id="comments-input" placeholder="Comments..." maxlength="1000" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-column">
+        <div class="panel sidebar-section active">
+             <h3 class="collapsible-header">
+                <span>Summary & Actions</span>
+                <span class="collapse-icon">+</span>
+            </h3>
+            <div class="collapsible-content">
+                <textarea id="summary-text" readonly></textarea>
+                <div class="summary-actions">
+                    <button id="copy-btn"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy!</button>
+                    <button id="download-txt-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>Download as .txt</button>
+                    <button id="download-png-btn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Download as .png</button>
+                    <button id="download-pdf-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>Download as .pdf</button>
+                    <button id="reset-values-btn"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>Reset Values</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel sidebar-section">
+            <h3 class="collapsible-header">
+                <span>File Merging</span>
+                <span class="collapse-icon">+</span>
+            </h3>
+            <div class="collapsible-content">
+                <div class="template-row">
+                    <label for="merge-txt-input" class="file-upload-label full-width-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Merge .txt files</label>
+                    <input type="file" id="merge-txt-input" accept=".txt" multiple>
+                </div>
+                 <div class="template-row">
+                    <label for="merge-pdf-input" class="file-upload-label full-width-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Merge txt files to .pdf</label>
+                    <input type="file" id="merge-pdf-input" accept=".txt" multiple>
+                </div>
+                <div class="template-row">
+                    <label for="merge-pdfs-input" class="file-upload-label full-width-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Merge pdf files</label>
+                    <input type="file" id="merge-pdfs-input" accept=".pdf" multiple>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel sidebar-section">
+            <h3 class="collapsible-header">
+                <span>Add Items</span>
+                <span class="collapse-icon">+</span>
+            </h3>
+            <div class="collapsible-content">
+                <div class="add-row-buttons">
+                    <button id="add-yn-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Yes/No</button>
+                    <button id="add-dd-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Dropdown</button>
+                    <button id="add-pn-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>-/+</button>
+                    <button id="add-7char-btn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>7 Char</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel sidebar-section">
+            <h3 class="collapsible-header">
+                <span>Template Management</span>
+                <span class="collapse-icon">+</span>
+            </h3>
+            <div class="collapsible-content">
+                <div class="template-row">
+                    <input type="text" id="template-name-input" placeholder="Enter template name...">
+                    <button id="save-template-btn"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Save</button>
+                </div>
+                <div class="template-row">
+                    <select id="template-select"></select>
+                    <button id="load-template-btn"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="20" y1="12" x2="4" y2="12"></line></svg>Load</button>
+                    <button id="delete-template-btn"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>Delete</button>
+                </div>
+                 <div class="template-row">
+                    <button id="download-template-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download</button>
+                    <label for="upload-template-input" class="file-upload-label"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 14 12 9 7 14"></polyline><line x1="12" y1="9" x2="12" y2="21"></line></svg>Load from File</label>
+                    <input type="file" id="upload-template-input" accept=".json">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="confirm-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modal-title">Confirm Action</h3>
+        <p id="modal-message">Are you sure?</p>
+        <div id="modal-input-container"></div>
+        <div class="modal-actions">
+            <button id="modal-cancel-btn">Cancel</button>
+            <button id="modal-confirm-btn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // All JS functions remain here.
+    const defaultTemplate = [
+        // Personal Info
+        { text: "Discord Username", type: "32char", deletable: true },
+        { text: "Time Zone", type: "dd", deletable: true, options: [
+            'UTC+14: Line Islands Time (Kiritimati)', 'UTC+13: Tonga Time (Nuku\'alofa, Apia)',
+            'UTC+12: N. Zealand ST (Auckl.,Welling.)', 'UTC+11: Solomon Islands T. (Nouméa)',
+            'UTC+10: Australian EST (Sydney,Melbo.)', 'UTC+9:30: Australian CST (Adel., Dar.)',
+            'UTC+9: Japan/Korea ST (Tokyo, Seoul)', 'UTC+8: China ST (Beijing,Shang.Singp.)',
+            'UTC+7: Indochina T. (Bangk.,Jak.,Han.)', 'UTC+6:30: Myanmar Time (Yangon)',
+            'UTC+6: Bangladesh ST (Dhaka,Almaty)', 'UTC+5:45: Nepal Time (Kathmandu)',
+            'UTC+5:30: Indian ST (Mumbai, Delhi)', 'UTC+5: Pakistan ST (Karachi,Tashkent)',
+            'UTC+4:30: Afghanistan Time (Kabul)', 'UTC+4: Gulf Std. T. (Dubai, Baku)',
+            'UTC+3:30: Iran Std. T. (Tehran)', 'UTC+3: Moscow Std. T. (Istanbul)',
+            'UTC+2: Eastern Euro.T. (Athens, Cairo)', 'UTC+1: Central Euro.T (Berlin,Paris,Ro)',
+            'UTC+0: Greenwich MT (Lon.Dub.Lisb.)', 'UTC-1: Cape Verde T. (Praia, Azores)',
+            'UTC-2: South Georgia Time', 'UTC-3: Argent./Brazil T (B.Aires,S.Pau.)',
+            'UTC-3:30: Newfoundland ST (St.John.)', 'UTC-4: Atlantic Std. T. (Halifax, La Paz)',
+            'UTC-5: Eastern ST (New York,Tor.,Bog.)', 'UTC-6: Central ST (Chicago,Mexico C.)',
+            'UTC-7: Mountain ST (Denver, Phoenix)', 'UTC-8: Pacific ST (L.Angeles,Vancou.)',
+            'UTC-9: Alaska Std. T. (Anchorage)', 'UTC-9:30: Marquesas Islands Time',
+            'UTC-10: Hawaii-Aleutian ST (Honolulu)', 'UTC-11: Samoa Std. T. (Pago Pago)',
+            'UTC-12: International Date Line West'
+        ]},
+        // Pre-Trade
+        { text: "Instrument", type: "32char", deletable: true },
+        { text: "Macro Market", type: "pn", deletable: true }, 
+        { text: "News", type: "pn", deletable: true },
+        { text: "Session", type: "dd", deletable: true, options: ["New York", "Asia", "London"] },
+        { text: "Levels", type: "yn", deletable: true },
+        // Mid-Trade
+        { text: "Trend", type: "yn", deletable: true }, 
+        { text: "Volume/CVD", type: "yn", deletable: true },
+        { text: "Momentum", type: "yn", deletable: true },
+        // Post-Trade
+        { text: "RSI", type: "7char", deletable: true }, 
+        { text: "Plan/Setup", type: "yn", deletable: true },
+        { text: "Long/Short", type: "ls", deletable: false }, 
+        { text: "Margin in USD", type: "money", deletable: false },
+        // Review Notes
+        { text: "Leverage", type: "leverage", deletable: true }, 
+        { text: "Sleep quality", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
+        { text: "Mood", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] }
+    ];
+
+    let screenshotData = {
+        preTrade: null,
+        limitOrder: null,
+        triggeredLimitOrder: null,
+        executedMarketOrder: null,
+        slTpAdjusted: null,
+        positionClosed: null
+    };
+
+    const screenshotTitles = {
+        preTrade: "Pre-Trade Screenshot",
+        limitOrder: "Limit Order Screenshot",
+        triggeredLimitOrder: "Triggered Limit Order Screenshot",
+        executedMarketOrder: "Executed Market Order Screenshot",
+        slTpAdjusted: "Stop-Loss and/or TP Adjusted Screenshot",
+        positionClosed: "Position Closed Screenshot"
+    };
+
+    function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 4000); 
+    }
+
+    function showConfirmModal(title, message, confirmText = 'Confirm') {
+        return new Promise(resolve => {
+            const modalOverlay = document.getElementById('confirm-modal-overlay');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal-input-container').innerHTML = '';
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+            confirmBtn.textContent = confirmText;
+            confirmBtn.style.backgroundColor = 'var(--delete-action-btn-bg)';
+
+            modalOverlay.classList.add('visible');
+
+            const resolvePromise = (value) => {
+                modalOverlay.classList.remove('visible');
+                confirmBtn.onclick = null;
+                cancelBtn.onclick = null;
+                resolve(value);
+            };
+
+            confirmBtn.onclick = () => resolvePromise(true);
+            cancelBtn.onclick = () => resolvePromise(false);
+        });
+    }
+
+    function showPromptModal(title, message, defaultValue = '') {
+        return new Promise(resolve => {
+            const modalOverlay = document.getElementById('confirm-modal-overlay');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const inputContainer = document.getElementById('modal-input-container');
+            inputContainer.innerHTML = `<input type="text" id="modal-prompt-input" value="${defaultValue}">`;
+            
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+            confirmBtn.textContent = 'Save';
+            confirmBtn.style.backgroundColor = 'var(--action-btn-bg)';
+
+            modalOverlay.classList.add('visible');
+            const input = document.getElementById('modal-prompt-input');
+            input.focus();
+            input.select();
+
+            const resolvePromise = (value) => {
+                modalOverlay.classList.remove('visible');
+                confirmBtn.onclick = null;
+                cancelBtn.onclick = null;
+                input.onkeydown = null;
+                resolve(value);
+            };
+
+            confirmBtn.onclick = () => resolvePromise(input.value.trim());
+            cancelBtn.onclick = () => resolvePromise(null);
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); confirmBtn.click(); } 
+                else if (e.key === 'Escape') { cancelBtn.click(); }
+            };
+        });
+    }
+
+    function validateNumericInput(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
+    function handleButtonClick(event) {
+        const button = event.currentTarget;
+        const currentState = button.dataset.state;
+        const rect = button.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const middle = rect.width / 2;
+        if (currentState === 'neutral') {
+            if (clickX > middle) { button.classList.add('checked'); button.dataset.state = 'checked'; } 
+            else { button.classList.add('unchecked'); button.dataset.state = 'unchecked'; }
+        } else {
+            button.classList.remove('checked', 'unchecked');
+            button.dataset.state = 'neutral';
+        }
+        updateSummaryText();
+    }
+
+    async function handleDeleteClick(event) {
+        const itemToRemove = event.currentTarget.closest('.checklist-item');
+        const userConfirmed = await showConfirmModal('Confirm Deletion', 'Are you sure you want to delete this item?', 'Delete');
+        if (userConfirmed) {
+            itemToRemove.remove();
+            updateSummaryText();
+            savePersistentValues();
+            showToast('Item deleted.');
+        }
+    }
+    
+    async function resetAllValues() {
+        const confirmed = await showConfirmModal('Reset All Values', 'Are you sure you want to clear all inputs and reset all values to default? (Personal Info will not be reset)', 'Reset');
+        if (confirmed) {
+            const groupsToReset = document.querySelectorAll('.trade-group:not(:first-child) .checklist-group-items:not(#screenshots-items)');
+            groupsToReset.forEach(group => {
+                group.querySelectorAll('.three-state-button').forEach(btn => {
+                    btn.classList.remove('checked', 'unchecked');
+                    btn.dataset.state = 'neutral';
+                });
+                group.querySelectorAll('.dropdown').forEach(sel => sel.value = '');
+                group.querySelectorAll('.char-input, .char-input-long, .money-input, .leverage-input').forEach(inp => inp.value = '');
+            });
+            
+            document.getElementById('comments-input').value = '';
+            
+            Object.keys(screenshotData).forEach(key => {
+                screenshotData[key] = null;
+                const preview = document.querySelector(`.screenshot-row[data-key="${key}"] .screenshot-preview`);
+                const input = document.querySelector(`.screenshot-row[data-key="${key}"] .screenshot-input`);
+                if (preview) preview.style.display = 'none';
+                if (input) input.value = null;
+            });
+
+            updateSummaryText();
+            showToast('All values (except Personal Info) have been reset.');
+        }
+    }
+    
+    function savePersistentValues() {
+        const container = document.getElementById('personal-info-items');
+        const items = container.querySelectorAll('.checklist-item');
+        items.forEach(item => {
+            const key = item.querySelector('.item-text').textContent;
+            const input = item.querySelector('input, select');
+            if (key && input) {
+                localStorage.setItem(`personal_info_${key}`, input.value);
+            }
+        });
+    }
+
+    function loadPersistentValues() {
+        const oldDiscordKey = 'personal_info_Discord Name';
+        const newDiscordKey = 'personal_info_Discord Username';
+        if (localStorage.getItem(oldDiscordKey) !== null) {
+            const oldValue = localStorage.getItem(oldDiscordKey);
+            localStorage.setItem(newDiscordKey, oldValue);
+            localStorage.removeItem(oldDiscordKey);
+        }
+
+        const container = document.getElementById('personal-info-items');
+        const items = container.querySelectorAll('.checklist-item');
+        items.forEach(item => {
+            const key = item.querySelector('.item-text').textContent;
+            const input = item.querySelector('input, select');
+            if (key && input) {
+                const savedValue = localStorage.getItem(`personal_info_${key}`);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+            }
+        });
+        updateSummaryText();
+    }
+
+    function processImageFile(file, key) {
+        if (!file || !file.type.startsWith('image/')) {
+            showToast('Please select a valid image file.', 'error');
+            return;
+        }
+        const preview = document.querySelector(`.screenshot-row[data-key="${key}"] .screenshot-preview`);
+        if(!preview) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            screenshotData[key] = e.target.result;
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            showToast(`Image for "${screenshotTitles[key]}" loaded!`);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function pasteFromClipboard(key) {
+        try {
+            const clipboardItems = await navigator.clipboard.read();
+            for (const item of clipboardItems) {
+                const imageType = item.types.find(type => type.startsWith('image/'));
+                if (imageType) {
+                    const blob = await item.getType(imageType);
+                    processImageFile(blob, key);
+                    return;
+                }
+            }
+            showToast('No image found on clipboard.', 'error');
+        } catch (err) {
+            console.error('Failed to read clipboard contents: ', err);
+            showToast('Failed to read clipboard. Please grant permission.', 'error');
+        }
+    }
+
+    function handlePasteEvent(event, key) {
+        event.preventDefault();
+        event.stopPropagation();
+        const items = event.clipboardData.items;
+        for (const item of items) {
+            if (item.type.startsWith('image/')) {
+                const file = item.getAsFile();
+                processImageFile(file, key);
+                return;
+            }
+        }
+        showToast('No image found on clipboard.', 'error');
+    }
+
+    function createRow(itemData, containerElement) {
+        const { text, type, deletable, options } = itemData;
+        const newItem = document.createElement('div');
+        newItem.className = 'checklist-item';
+        let controlHtml = '';
+        
+        const isPersistent = containerElement.id === 'personal-info-items';
+        const onInputHandler = `oninput="updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"`;
+        const onChangeHandler = `onchange="updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"`;
+
+        switch(type) {
+            case 'yn': controlHtml = `<div class="three-state-button" data-type="yn" data-state="neutral"><div class="icon icon-cross">×</div><div class="icon icon-check">✓</div><div class="button-overlay"></div></div>`; break;
+            case 'pn': controlHtml = `<div class="three-state-button" data-type="pn" data-state="neutral"><div class="icon icon-minus">-</div><div class="icon icon-plus">+</div><div class="button-overlay"></div></div>`; break;
+            case 'ls': controlHtml = `<div class="three-state-button" data-type="ls" data-state="neutral"><div class="icon icon-short">S</div><div class="icon icon-long">L</div><div class="button-overlay"></div></div>`; break;
+            case 'dd':
+                let optionsHtml = '<option value=""></option>';
+                const defaultDdOptions = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10];
+                const dropdownOptions = options || defaultDdOptions;
+                dropdownOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+                controlHtml = `<select class="dropdown" ${onChangeHandler}>${optionsHtml}</select>`;
+                break;
+            case '7char': controlHtml = `<input type="text" class="char-input" maxlength="7" ${onInputHandler}>`; break;
+            case '32char': controlHtml = `<input type="text" class="char-input-long" maxlength="32" ${onInputHandler}>`; break;
+            case 'money': controlHtml = `<div class="money-input-container"><input type="text" class="money-input dollars" placeholder="0" maxlength="7" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"><span>,</span><input type="text" class="money-input cents" placeholder="00" maxlength="2" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"></div>`; break;
+            case 'leverage': controlHtml = `<input type="text" class="leverage-input" maxlength="3" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}">`; break;
+        }
+        const deleteButtonHtml = deletable ? `<button class="delete-btn">×</button>` : '';
+        newItem.innerHTML = `<span class="item-text" contenteditable="true">${text}</span>${controlHtml}${deleteButtonHtml}`;
+        
+        containerElement.appendChild(newItem);
+
+        const button = newItem.querySelector('.three-state-button');
+        if (button) button.addEventListener('click', handleButtonClick);
+        const deleteBtn = newItem.querySelector('.delete-btn');
+        if (deleteBtn) deleteBtn.addEventListener('click', handleDeleteClick);
+    }
+
+    function buildChecklistFromStructure(structure) {
+        const groupContainers = {
+            personal: document.getElementById('personal-info-items'),
+            pre: document.getElementById('pre-trade-items'),
+            mid: document.getElementById('mid-trade-items'),
+            post: document.getElementById('post-trade-items'),
+            review: document.getElementById('review-notes-items')
+        };
+        Object.values(groupContainers).forEach(c => c.innerHTML = '');
+
+        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument');
+        const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Trend') - personalInfoCount;
+        const midTradeCount = defaultTemplate.findIndex(item => item.text === 'RSI') - (personalInfoCount + preTradeCount);
+        const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Leverage') - (personalInfoCount + preTradeCount + midTradeCount);
+
+        const structureGroups = {
+            personal: structure.slice(0, personalInfoCount),
+            pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
+            mid: structure.slice(personalInfoCount + preTradeCount, personalInfoCount + preTradeCount + midTradeCount),
+            post: structure.slice(personalInfoCount + preTradeCount + midTradeCount, personalInfoCount + preTradeCount + midTradeCount + postTradeCount),
+            review: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount)
+        };
+
+        if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
+             const totalItems = structure.length;
+            const itemsPerGroup = Math.floor(totalItems / 5);
+            let remainder = totalItems % 5;
+            let currentIndex = 0;
+            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review'];
+            groupKeys.forEach(key => {
+                let numToTake = itemsPerGroup + (remainder > 0 ? 1 : 0);
+                const chunk = structure.slice(currentIndex, currentIndex + numToTake);
+                chunk.forEach(itemData => createRow(itemData, groupContainers[key]));
+                currentIndex += numToTake;
+                if (remainder > 0) remainder--;
+            });
+        } else {
+             for (const groupKey in structureGroups) {
+                structureGroups[groupKey].forEach(itemData => {
+                    const originalItem = defaultTemplate.find(i => i.text === itemData.text);
+                    if (originalItem && originalItem.options) {
+                        itemData.options = originalItem.options;
+                    }
+                    createRow(itemData, groupContainers[groupKey]);
+                });
+            }
+        }
+        updateSummaryText();
+    }
+
+
+    function getChecklistStructure() {
+        const items = document.querySelectorAll('#personal-info-items .checklist-item, #pre-trade-items .checklist-item, #mid-trade-items .checklist-item, #post-trade-items .checklist-item, #review-notes-items .checklist-item');
+        const structure = [];
+        items.forEach(item => {
+            const text = item.querySelector('.item-text').textContent;
+            let type = '';
+            let deletable = !!item.querySelector('.delete-btn');
+            const btn = item.querySelector('.three-state-button');
+            const dropdown = item.querySelector('.dropdown');
+            const charInput = item.querySelector('.char-input, .char-input-long');
+            const moneyContainer = item.querySelector('.money-input-container');
+            const leverageInput = item.querySelector('.leverage-input');
+            if (btn) type = btn.dataset.type;
+            else if (dropdown) type = 'dd';
+            else if (charInput) {
+                type = charInput.classList.contains('char-input-long') ? '32char' : '7char';
+            }
+            else if (moneyContainer) type = 'money';
+            else if (leverageInput) type = 'leverage';
+            structure.push({ text, type, deletable });
+        });
+        return structure;
+    }
+
+    function populateTemplateDropdown() {
+        const select = document.getElementById('template-select');
+        select.innerHTML = '';
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('checklist_template_')) {
+                const name = key.replace('checklist_template_', '');
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            }
+        }
+        const activeTemplate = localStorage.getItem('active_template');
+        if (activeTemplate) { select.value = activeTemplate; }
+    }
+    
+    function saveTemplate() {
+        const nameInput = document.getElementById('template-name-input');
+        const name = nameInput.value.trim();
+        if (!name) { showToast('Please enter a name for the template.', 'error'); return; }
+        const structure = getChecklistStructure();
+        localStorage.setItem(`checklist_template_${name}`, JSON.stringify(structure));
+        localStorage.setItem('active_template', name);
+        nameInput.value = '';
+        populateTemplateDropdown();
+        showToast(`Template "${name}" saved!`);
+    }
+
+    function loadTemplate() {
+        const select = document.getElementById('template-select');
+        const name = select.value;
+        if (!name) { showToast('No template selected.', 'error'); return; }
+        const structureString = localStorage.getItem(`checklist_template_${name}`);
+        if (structureString) {
+            const structure = JSON.parse(structureString);
+            buildChecklistFromStructure(structure);
+            localStorage.setItem('active_template', name);
+            showToast(`Template "${name}" loaded!`);
+        }
+    }
+
+    async function deleteTemplate() {
+        const select = document.getElementById('template-select');
+        const name = select.value;
+        if (!name) { showToast('No template selected.', 'error'); return; }
+        const userConfirmed = await showConfirmModal('Confirm Template Deletion', `Are you sure you want to delete the template "${name}"?`, 'Delete');
+        if (userConfirmed) {
+            localStorage.removeItem(`checklist_template_${name}`);
+            if (localStorage.getItem('active_template') === name) {
+                localStorage.removeItem('active_template');
+            }
+            populateTemplateDropdown();
+            showToast(`Template "${name}" deleted.`);
+            buildChecklistFromStructure(defaultTemplate);
+        }
+    }
+
+    function downloadTemplate() {
+        const select = document.getElementById('template-select');
+        const name = select.value;
+        if (!name) { showToast('No template selected to download.', 'error'); return; }
+        const structureString = localStorage.getItem(`checklist_template_${name}`);
+        const blob = new Blob([structureString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${name}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    async function uploadTemplate(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                const structure = JSON.parse(e.target.result);
+                const initialName = file.name.replace('.json', '');
+                const name = await showPromptModal('Import Template', 'Please provide a name for the imported template:', initialName);
+                if (name) {
+                    localStorage.setItem(`checklist_template_${name}`, JSON.stringify(structure));
+                    localStorage.setItem('active_template', name);
+                    buildChecklistFromStructure(structure);
+                    populateTemplateDropdown();
+                    showToast(`Template "${name}" imported successfully!`);
+                }
+            } catch (error) { showToast('Invalid template file.', 'error'); }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+    
+    function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsText(file);
+        });
+    }
+
+    function readFileAsArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    async function mergeTxtFiles(event) {
+        const files = event.target.files;
+        if (!files.length) return;
+        let allContent = [];
+        for (const file of files) {
+            try {
+                const text = await readFileAsText(file);
+                allContent.push(`====================\nFILE: ${file.name}\n====================\n\n${text}`);
+            } catch (err) {
+                console.error("Error reading file:", file.name, err);
+                showToast(`Could not read the file: ${file.name}`, 'error');
+            }
+        }
+        const separator = `\n\n\n`;
+        const mergedContent = allContent.join(separator);
+        const blob = new Blob([mergedContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Merged_Files.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        event.target.value = '';
+    }
+
+    async function mergeTxtFilesAsPdf(event) {
+        const files = event.target.files;
+        if (!files.length) return;
+        const label = document.querySelector('label[for="merge-pdf-input"]');
+        const originalText = label.textContent;
+        label.textContent = 'Generating PDF...';
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const margin = 15;
+            const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const text = await readFileAsText(file);
+                if (i > 0) { doc.addPage(); }
+                let y = margin;
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`File: ${file.name}`, margin, y);
+                y += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                const textLines = doc.splitTextToSize(text, maxWidth);
+                
+                doc.text(textLines, margin, y);
+            }
+            doc.save('Merged_Files.pdf');
+        } catch (err) {
+            console.error("Error generating PDF:", err);
+            showToast("Could not generate PDF. See console for details.", 'error');
+        } finally {
+            label.textContent = originalText;
+            event.target.value = '';
+        }
+    }
+    
+    async function mergePdfFiles(event) {
+        const files = event.target.files;
+        if (!files.length) return;
+        const label = document.querySelector('label[for="merge-pdfs-input"]');
+        const originalText = label.textContent;
+        label.textContent = 'Merging PDFs...';
+        try {
+            const { PDFDocument } = PDFLib;
+            const mergedPdf = await PDFDocument.create();
+
+            for (const file of files) {
+                const arrayBuffer = await readFileAsArrayBuffer(file);
+                const pdf = await PDFDocument.load(arrayBuffer);
+                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                copiedPages.forEach(page => mergedPdf.addPage(page));
+            }
+
+            const mergedPdfBytes = await mergedPdf.save();
+            const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Merged_PDFs.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error("Error merging PDFs:", err);
+            showToast("Could not merge PDFs. See console for details.", 'error');
+        } finally {
+            label.textContent = originalText;
+            event.target.value = '';
+        }
+    }
+
+    function getFilenameTimestamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hour = String(now.getHours()).padStart(2, '0');
+        const minute = String(now.getMinutes()).padStart(2, '0');
+        const second = String(now.getSeconds()).padStart(2, '0');
+        return `${year}.${month}.${day} ${hour}-${minute}-${second}`;
+    }
+
+    function generateEntryText() {
+        const listContent = document.getElementById('summary-text').value;
+        const commentsText = document.getElementById('comments-input').value.trim();
+        const now = new Date();
+        const contentTimestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        
+        const headerLines = [
+            "Trade No:", `Position opening: ${contentTimestamp}`, "Position closing:",
+            "Profit amount in USD:", "Margin-based profit percentage:", "Loss amount in USD:", "Margin-based loss percentage:"
+        ];
+        let finalContentArray = [...headerLines];
+        if (listContent.trim()) {
+            finalContentArray.push('');
+            finalContentArray.push(listContent.trim());
+        }
+        finalContentArray.push('');
+        finalContentArray.push('Comments:');
+        if (commentsText) { finalContentArray.push(commentsText); }
+        return finalContentArray.join('\n');
+    }
+
+    function copyToClipboard() {
+        const fullContent = generateEntryText();
+        navigator.clipboard.writeText(fullContent);
+        showToast("Text copied to clipboard!");
+    }
+
+    function downloadEntryAsTxt() {
+        const fullContent = generateEntryText();
+        const filenameTimestamp = getFilenameTimestamp();
+        const activeTemplateName = localStorage.getItem('active_template');
+        let filename = `Trade ${filenameTimestamp}.txt`;
+        if (activeTemplateName) {
+            filename = `${activeTemplateName} - Trade ${filenameTimestamp}.txt`;
+        }
+        const blob = new Blob([fullContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    async function downloadEntryAsPdf() {
+        const fullContent = generateEntryText();
+        const filenameTimestamp = getFilenameTimestamp();
+        const activeTemplateName = localStorage.getItem('active_template');
+        let filename = `Trade ${filenameTimestamp}.pdf`;
+        if (activeTemplateName) {
+            filename = `${activeTemplateName} - Trade ${filenameTimestamp}.pdf`;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+        
+        const margin = 15;
+        const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
+        
+        doc.setFont('Courier', 'normal');
+        doc.setFontSize(10);
+        
+        const textLines = doc.splitTextToSize(fullContent, maxWidth);
+        
+        const pageHeight = doc.internal.pageSize.getHeight() - margin;
+        let y = margin;
+        const lineHeight = 5;
+
+        textLines.forEach(line => {
+            if (y + lineHeight > pageHeight) {
+                doc.addPage();
+                y = margin;
+            }
+            doc.text(line, margin, y);
+            y += lineHeight;
+        });
+        
+        for (const key in screenshotData) {
+            if (screenshotData[key]) {
+                try {
+                    const getImageDimensions = src => new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                        img.onerror = reject;
+                        img.src = src;
+                    });
+
+                    const img_dimensions = await getImageDimensions(screenshotData[key]);
+                    
+                    doc.addPage();
+                    doc.setFontSize(12);
+                    doc.text(screenshotTitles[key], margin, margin);
+
+                    const usableWidth = doc.internal.pageSize.getWidth() - margin * 2;
+                    const usableHeight = doc.internal.pageSize.getHeight() - margin * 2 - 10;
+                    const aspectRatio = img_dimensions.width / img_dimensions.height;
+
+                    let finalWidth = usableWidth;
+                    let finalHeight = finalWidth / aspectRatio;
+
+                    if (finalHeight > usableHeight) {
+                        finalHeight = usableHeight;
+                        finalWidth = finalHeight * aspectRatio;
+                    }
+
+                    doc.addImage(screenshotData[key], 'JPEG', margin, margin + 10, finalWidth, finalHeight);
+                } catch (e) {
+                    console.error("Could not add image to PDF:", e);
+                    showToast(`Failed to add ${screenshotTitles[key]} to PDF.`, 'error');
+                }
+            }
+        }
+
+        doc.save(filename);
+    }
+
+    async function downloadEntryAsPng() {
+        const button = document.getElementById('download-png-btn');
+        const elementToCapture = document.getElementById('capture-area');
+        const filenameTimestamp = getFilenameTimestamp();
+        const activeTemplateName = localStorage.getItem('active_template');
+        let filename = `Trade ${filenameTimestamp}.png`;
+        if (activeTemplateName) {
+            filename = `${activeTemplateName} - Trade ${filenameTimestamp}.png`;
+        }
+
+        button.textContent = 'Generating...';
+        button.disabled = true;
+
+        try {
+            const canvas = await html2canvas(elementToCapture, {
+                useCORS: true,
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color')
+            });
+            const dataUrl = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Error generating image:', error);
+            showToast('Could not generate image. See console for details.', 'error');
+        } finally {
+            button.textContent = 'Download as .png image';
+            button.disabled = false;
+        }
+    }
+
+    function updateSummaryText() {
+        const summaryTextarea = document.getElementById('summary-text');
+        const listItems = document.querySelectorAll('#checklist-container .checklist-item');
+        let summaryContent = "";
+
+        const groupHeaders = document.querySelectorAll('.trade-group-header');
+        const itemsByGroup = {};
+        groupHeaders.forEach(h => itemsByGroup[h.textContent] = []);
+
+        listItems.forEach(item => {
+            const groupContainer = item.closest('.trade-group');
+            if (!groupContainer) return;
+            const groupHeader = groupContainer.querySelector('.trade-group-header').textContent;
+            
+            const text = item.querySelector('.item-text').textContent;
+            let value = "";
+            const itemButton = item.querySelector('.three-state-button');
+            const dropdown = item.querySelector('.dropdown');
+            const charInput = item.querySelector('.char-input, .char-input-long');
+            const dollarsInput = item.querySelector('.money-input.dollars');
+            const centsInput = item.querySelector('.money-input.cents');
+            const leverageInput = item.querySelector('.leverage-input');
+            if (itemButton && itemButton.dataset.type === 'yn') {
+                const state = itemButton.dataset.state;
+                if (state === 'checked') { value = "Yes"; } else if (state === 'unchecked') { value = "No"; }
+            } else if (itemButton && itemButton.dataset.type === 'ls') {
+                const state = itemButton.dataset.state;
+                if (state === 'checked') { value = "Long"; } else if (state === 'unchecked') { value = "Short"; }
+            } else if (dropdown) {
+                value = dropdown.value;
+            } else if (itemButton && itemButton.dataset.type === 'pn') {
+                const state = itemButton.dataset.state;
+                if (state === 'checked') { value = "+"; } else if (state === 'unchecked') { value = "-"; }
+            } else if (charInput) {
+                value = charInput.value;
+            } else if (dollarsInput && centsInput) {
+                if (dollarsInput.value || centsInput.value) {
+                    const dollars = dollarsInput.value || '0';
+                    const cents = centsInput.value.padStart(2, '0');
+                    const formattedDollars = Number(dollars).toLocaleString('en-US');
+                    value = `${formattedDollars}.${cents} USD`;
+                }
+            } else if (leverageInput) {
+                value = leverageInput.value;
+            }
+
+            if(itemsByGroup[groupHeader]) {
+                 itemsByGroup[groupHeader].push(`${text}: ${value}`);
+            }
+        });
+
+        for(const groupName in itemsByGroup) {
+            if (itemsByGroup[groupName].length > 0) {
+                summaryContent += `--- ${groupName} ---\n`;
+                summaryContent += itemsByGroup[groupName].join('\n') + '\n\n';
+            }
+        }
+
+        summaryTextarea.value = summaryContent.trim();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Theme switcher
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        themeToggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+
+        // Initial checklist load
+        const activeTemplateName = localStorage.getItem('active_template');
+        let initialStructure = defaultTemplate;
+        if (activeTemplateName) {
+            const savedStructure = localStorage.getItem(`checklist_template_${activeTemplateName}`);
+            if (savedStructure) {
+                initialStructure = JSON.parse(savedStructure);
+            }
+        }
+        buildChecklistFromStructure(initialStructure);
+        
+        populateTemplateDropdown();
+
+        // SortableJS initialization for multiple groups
+        const checklists = document.querySelectorAll('.checklist-group-items');
+        checklists.forEach(list => {
+            new Sortable(list, {
+                group: 'shared-checklist', 
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    updateSummaryText();
+                }
+            });
+        });
+
+        // Main content collapsible functionality
+        const mainCollapsibleHeaders = document.querySelectorAll('.trade-group-header');
+        mainCollapsibleHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                this.parentElement.classList.toggle('active');
+            });
+        });
+
+        // Sidebar collapsible functionality
+        const sidebarCollapsibleHeaders = document.querySelectorAll('.sidebar-section .collapsible-header');
+        sidebarCollapsibleHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const currentSection = this.parentElement;
+                const wasActive = currentSection.classList.contains('active');
+                document.querySelectorAll('.sidebar-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                if (!wasActive) {
+                    currentSection.classList.add('active');
+                }
+            });
+        });
+
+
+        // Add row buttons to target the last group
+        const reviewNotesContainer = document.getElementById('review-notes-items');
+        document.getElementById('add-yn-btn').addEventListener('click', () => createRow({ text: 'New Yes/No Item', type: 'yn', deletable: true }, reviewNotesContainer));
+        document.getElementById('add-dd-btn').addEventListener('click', () => createRow({ text: 'New Dropdown Item', type: 'dd', deletable: true }, reviewNotesContainer));
+        document.getElementById('add-pn-btn').addEventListener('click', () => createRow({ text: 'New +/- Item', type: 'pn', deletable: true }, reviewNotesContainer));
+        document.getElementById('add-7char-btn').addEventListener('click', () => createRow({ text: 'New 7 Char Item', type: '7char', deletable: true }, reviewNotesContainer));
+
+        // Screenshot upload listeners
+        document.querySelectorAll('.screenshot-row').forEach(row => {
+            const key = row.dataset.key;
+            const input = row.querySelector('.screenshot-input');
+            const pasteBtn = row.querySelector('.paste-button');
+            const uploadLabel = row.querySelector('label');
+            
+            // Replaced the simple label listener with one for the new button-like label
+            uploadLabel.addEventListener('click', () => input.click());
+            input.addEventListener('change', (e) => processImageFile(e.target.files[0], key));
+            pasteBtn.addEventListener('click', () => pasteFromClipboard(key));
+            row.addEventListener('paste', (e) => handlePasteEvent(e, key));
+        });
+
+        // Template management buttons
+        document.getElementById('save-template-btn').addEventListener('click', saveTemplate);
+        document.getElementById('load-template-btn').addEventListener('click', loadTemplate);
+        document.getElementById('delete-template-btn').addEventListener('click', deleteTemplate);
+        document.getElementById('download-template-btn').addEventListener('click', downloadTemplate);
+        document.getElementById('upload-template-input').addEventListener('change', uploadTemplate);
+        
+        // File Merging Buttons
+        document.getElementById('merge-txt-input').addEventListener('change', mergeTxtFiles);
+        document.getElementById('merge-pdf-input').addEventListener('change', mergeTxtFilesAsPdf);
+        document.getElementById('merge-pdfs-input').addEventListener('change', mergePdfFiles);
+
+        // Summary action buttons
+        document.getElementById('copy-btn').addEventListener('click', copyToClipboard);
+        document.getElementById('download-txt-btn').addEventListener('click', downloadEntryAsTxt);
+        document.getElementById('download-png-btn').addEventListener('click', downloadEntryAsPng);
+        document.getElementById('download-pdf-btn').addEventListener('click', downloadEntryAsPdf);
+        document.getElementById('reset-values-btn').addEventListener('click', resetAllValues);
+        
+        loadPersistentValues();
+    });
+</script>
+
+</body>
+</html>
