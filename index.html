@@ -625,6 +625,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Execution <span class="collapse-icon-main">+</span></h3>
+                    <div class="collapsible-content-main">
+                        <div class="collapsible-inner-wrapper">
+                            <div id="execution-items" class="checklist-group-items"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="trade-group">
                     <h3 class="trade-group-header" aria-expanded="false">Mid-Trade <span class="collapse-icon-main">+</span></h3>
                     <div class="collapsible-content-main">
@@ -1184,6 +1194,7 @@
         const groupContainers = {
             personal: document.getElementById('personal-info-items'),
             pre: document.getElementById('pre-trade-items'),
+            execution: document.getElementById('execution-items'),
             mid: document.getElementById('mid-trade-items'),
             post: document.getElementById('post-trade-items'),
             review: document.getElementById('review-notes-items')
@@ -1205,10 +1216,10 @@
 
         if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
              const totalItems = structure.length;
-            const itemsPerGroup = Math.floor(totalItems / 5);
+            const itemsPerGroup = Math.floor(totalItems / 5); // This logic might need adjustment for 6 groups
             let remainder = totalItems % 5;
             let currentIndex = 0;
-            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review'];
+            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review']; // Missing 'execution'
             groupKeys.forEach(key => {
                 let numToTake = itemsPerGroup + (remainder > 0 ? 1 : 0);
                 const chunk = structure.slice(currentIndex, currentIndex + numToTake);
@@ -1218,13 +1229,15 @@
             });
         } else {
              for (const groupKey in structureGroups) {
-                structureGroups[groupKey].forEach(itemData => {
-                    const originalItem = defaultTemplate.find(i => i.text === itemData.text);
-                    if (originalItem && originalItem.options) {
-                        itemData.options = originalItem.options;
-                    }
-                    createRow(itemData, groupContainers[groupKey]);
-                });
+                if(groupContainers[groupKey]) {
+                    structureGroups[groupKey].forEach(itemData => {
+                        const originalItem = defaultTemplate.find(i => i.text === itemData.text);
+                        if (originalItem && originalItem.options) {
+                            itemData.options = originalItem.options;
+                        }
+                        createRow(itemData, groupContainers[groupKey]);
+                    });
+                }
             }
         }
         updateSummaryText();
@@ -1232,7 +1245,7 @@
 
 
     function getChecklistStructure() {
-        const items = document.querySelectorAll('#personal-info-items .checklist-item, #pre-trade-items .checklist-item, #mid-trade-items .checklist-item, #post-trade-items .checklist-item, #review-notes-items .checklist-item');
+        const items = document.querySelectorAll('#personal-info-items .checklist-item, #pre-trade-items .checklist-item, #execution-items .checklist-item, #mid-trade-items .checklist-item, #post-trade-items .checklist-item, #review-notes-items .checklist-item');
         const structure = [];
         items.forEach(item => {
             const text = item.querySelector('.item-text').textContent;
