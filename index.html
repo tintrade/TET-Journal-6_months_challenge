@@ -204,7 +204,7 @@
             display: flex;
             border-radius: 50px;
             border: 1px solid var(--neutral-btn-border);
-            width: 120px; /* MODIFIED for text */
+            width: 120px;
             height: 25px;
             overflow: hidden;
             position: relative;
@@ -229,7 +229,7 @@
         .three-state-button.checked .button-overlay { background-color: var(--checked-state-color); }
         .three-state-button.unchecked .button-overlay { background-color: var(--unchecked-state-color); }
 
-        .three-state-button .button-content { /* REFACTORED */
+        .three-state-button .button-content {
             flex: 1;
             display: flex;
             justify-content: center;
@@ -245,11 +245,9 @@
         .three-state-button[data-type="np"] .text-negative { color: var(--unchecked-state-color); }
         .three-state-button[data-type="np"] .text-positive { color: var(--checked-state-color); }
         
-        /* REFACTORED: Generic rules for showing/hiding options */
         .three-state-button.checked .is-unchecked-option { opacity: 0; }
         .three-state-button.unchecked .is-checked-option { opacity: 0; }
 
-        /* REFACTORED: Generic rule for selected option color */
         .three-state-button.checked .button-content,
         .three-state-button.unchecked .button-content {
             color: white;
@@ -473,7 +471,11 @@
             color: var(--secondary-text-color);
             font-style: italic;
         }
-
+        
+        .info-block {
+            margin: 20px 5px 10px 5px;
+            text-align: center;
+        }
 
         #toast-container {
             position: fixed;
@@ -602,8 +604,8 @@
             </div>
             
             <div id="checklist-container">
-                <div class="trade-group active">
-                    <h3 class="trade-group-header">Personal Info <span class="collapse-icon-main">+</span></h3>
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Personal Info <span class="collapse-icon-main">+</span></h3>
                     <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="personal-info-items" class="checklist-group-items"></div>
@@ -611,24 +613,28 @@
                     </div>
                 </div>
 
-                <div class="trade-group active">
-                    <h3 class="trade-group-header">Pre-Trade <span class="collapse-icon-main">+</span></h3>
+                <p class="info-block paste-hint">
+                    You don't have to fill out every field. It's sufficient to only input the data that suits you—what you're interested in, care about, use, and wish to record or turn into statistical data later.
+                </p>
+
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Pre-Trade <span class="collapse-icon-main">+</span></h3>
                      <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="pre-trade-items" class="checklist-group-items"></div>
                         </div>
                     </div>
                 </div>
-                <div class="trade-group active">
-                    <h3 class="trade-group-header">Mid-Trade <span class="collapse-icon-main">+</span></h3>
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Mid-Trade <span class="collapse-icon-main">+</span></h3>
                     <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="mid-trade-items" class="checklist-group-items"></div>
                         </div>
                     </div>
                 </div>
-                <div class="trade-group active">
-                    <h3 class="trade-group-header">Post-Trade <span class="collapse-icon-main">+</span></h3>
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Post-Trade <span class="collapse-icon-main">+</span></h3>
                      <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="post-trade-items" class="checklist-group-items"></div>
@@ -636,8 +642,8 @@
                     </div>
                 </div>
                 
-                 <div class="trade-group active">
-                    <h3 class="trade-group-header">Screenshots <span class="collapse-icon-main">+</span></h3>
+                 <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Screenshots <span class="collapse-icon-main">+</span></h3>
                     <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="screenshots-items" class="checklist-group-items">
@@ -718,8 +724,8 @@
                     </div>
                 </div>
 
-                 <div class="trade-group active">
-                    <h3 class="trade-group-header">Review Notes <span class="collapse-icon-main">+</span></h3>
+                 <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Review Notes <span class="collapse-icon-main">+</span></h3>
                     <div class="collapsible-content-main">
                         <div class="collapsible-inner-wrapper">
                             <div id="review-notes-items" class="checklist-group-items"></div>
@@ -991,9 +997,18 @@
         }
     }
     
+    function closeAllMainGroups() {
+        document.querySelectorAll('.trade-group').forEach(group => {
+            group.classList.remove('active');
+            group.querySelector('.trade-group-header').setAttribute('aria-expanded', 'false');
+        });
+    }
+
     async function resetAllValues() {
         const confirmed = await showConfirmModal('Reset All Values', 'Are you sure you want to clear all inputs and reset all values to default? (Personal Info will not be reset)', 'Reset');
         if (confirmed) {
+            closeAllMainGroups();
+
             const groupsToReset = document.querySelectorAll('.trade-group:not(:first-child) .checklist-group-items:not(#screenshots-items)');
             groupsToReset.forEach(group => {
                 group.querySelectorAll('.three-state-button').forEach(btn => {
@@ -1733,7 +1748,9 @@
         const mainCollapsibleHeaders = document.querySelectorAll('.trade-group-header');
         mainCollapsibleHeaders.forEach(header => {
             header.addEventListener('click', function() {
-                this.parentElement.classList.toggle('active');
+                const parentGroup = this.parentElement;
+                const isNowActive = parentGroup.classList.toggle('active');
+                this.setAttribute('aria-expanded', isNowActive);
             });
         });
 
@@ -1765,8 +1782,7 @@
             const key = row.dataset.key;
             const input = row.querySelector('.screenshot-input');
             const pasteBtn = row.querySelector('.paste-button');
-            const uploadLabel = row.querySelector('label');
-
+            
             input.addEventListener('change', (e) => processImageFile(e.target.files[0], key));
             pasteBtn.addEventListener('click', () => pasteFromClipboard(key));
             row.addEventListener('paste', (e) => handlePasteEvent(e, key));
