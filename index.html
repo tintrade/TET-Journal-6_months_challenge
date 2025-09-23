@@ -112,6 +112,29 @@
             margin-bottom: 10px;
         }
 
+        .header-controls { /* NEW */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-btn { /* NEW */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: var(--icon-color);
+            width: 25px;
+            height: 25px;
+        }
+        .header-btn:hover {
+            color: var(--text-color);
+        }
+        .header-btn svg {
+            width: 100%;
+            height: 100%;
+        }
+
         .title-text {
             font-size: 1.2em;
             font-weight: bold;
@@ -597,10 +620,18 @@
         <div id="capture-area">
             <div class="header">
                 <span class="title-text">TRADING JOURNAL ENTRY</span>
-                <label class="theme-switch">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
+                <div class="header-controls">
+                    <button id="expand-all-btn" class="header-btn" aria-label="Expand all groups">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9.75 9.75M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L14.25 9.75M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9.75 14.25m10.5 6v-4.5m0 4.5h-4.5m4.5 0L14.25 14.25" /></svg>
+                    </button>
+                    <button id="collapse-all-btn" class="header-btn" aria-label="Collapse all groups">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" /></svg>
+                    </button>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
             
             <div id="checklist-container">
@@ -1007,17 +1038,17 @@
         }
     }
     
-    function closeAllMainGroups() {
+    function toggleAllMainGroups(expandState) {
         document.querySelectorAll('.trade-group').forEach(group => {
-            group.classList.remove('active');
-            group.querySelector('.trade-group-header').setAttribute('aria-expanded', 'false');
+            group.classList.toggle('active', expandState);
+            group.querySelector('.trade-group-header').setAttribute('aria-expanded', expandState);
         });
     }
 
     async function resetAllValues() {
         const confirmed = await showConfirmModal('Reset All Values', 'Are you sure you want to clear all inputs and reset all values to default? (Personal Info will not be reset)', 'Reset');
         if (confirmed) {
-            closeAllMainGroups();
+            toggleAllMainGroups(false);
 
             const groupsToReset = document.querySelectorAll('.trade-group:not(:first-child) .checklist-group-items:not(#screenshots-items)');
             groupsToReset.forEach(group => {
@@ -1216,10 +1247,10 @@
 
         if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
              const totalItems = structure.length;
-            const itemsPerGroup = Math.floor(totalItems / 5); // This logic might need adjustment for 6 groups
+            const itemsPerGroup = Math.floor(totalItems / 5); 
             let remainder = totalItems % 5;
             let currentIndex = 0;
-            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review']; // Missing 'execution'
+            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review']; 
             groupKeys.forEach(key => {
                 let numToTake = itemsPerGroup + (remainder > 0 ? 1 : 0);
                 const chunk = structure.slice(currentIndex, currentIndex + numToTake);
@@ -1820,6 +1851,10 @@
         document.getElementById('download-pdf-btn').addEventListener('click', downloadEntryAsPdf);
         document.getElementById('reset-values-btn').addEventListener('click', resetAllValues);
         
+        // Global Action Buttons
+        document.getElementById('expand-all-btn').addEventListener('click', () => toggleAllMainGroups(true));
+        document.getElementById('collapse-all-btn').addEventListener('click', () => toggleAllMainGroups(false));
+
         loadPersistentValues();
     });
 </script>
