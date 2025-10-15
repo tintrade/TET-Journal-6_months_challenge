@@ -969,6 +969,37 @@
         { text: "Plan/Setup", type: "yn", deletable: true },
         { text: "Long/Short", type: "ls", deletable: false },
         { text: "Margin in USD", type: "money", deletable: false },
+        // Execution
+        { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
+        { text: "Entry Date/Local Time", type: "32char", deletable: true },
+        { text: "Exit Date/Local Time", type: "32char", deletable: true },
+        { text: "Time in Trade", type: "32char", deletable: true },
+        { text: "Setup Grade", type: "dd", deletable: true, options: ["A", "B", "C", "D", "F"] },
+        { text: "Confidence", type: "dd", deletable: true, options: ["High", "Medium", "Low"] },
+        { text: "Session", type: "dd", deletable: true, options: ["NY Pre", "NY Open", "NY Lunch", "NY Afternoon", "ASIA", "London", "Weekend", "Holiday", "Between Sessions"] },
+        { text: "Market Environment", type: "dd", deletable: true, options: ["Trend (Up)", "Trend (Down)", "Range", "Choppy"] },
+        { text: "Bias", type: "dd", deletable: true, options: ["Long", "Short", "Neutral"] },
+        { text: "News", type: "dd", deletable: true, options: ["Jobs (NFP or other)", "CPI/PPI/Inflation", "FOMC / Fed Rates", "Fed Speakers", "GDP", "Retail Sales", "ISM / PMI", "Big Earnings", "OPEC / Oil News", "Treasury Yields / Auction", "Breaking News", "Regulatory Headlines", "Geopolitical Events", "Black Swan Event", "Other", "None"] },
+        { text: "Symbol", type: "dd", deletable: true, options: ["AAVEUSDT", "ADAUSDT", "AVAXUSDT", "BTCUSDT", "DOGEUSDT", "ETHUSDT", "GOLD", "LINKUSDT", "OIL", "QQQ", "SILVER", "SOLUSDT", "SPY", "SUIUSDT", "TONUSDT", "XRPUSDT", ""] },
+        { text: "Setup Type", type: "dd", deletable: true, options: ["Breakout", "Reversal", "Continuation", "Reversion", "SFP/Sweep", "VWAP Bounce", "Diagonal Break", "Range Play", "Reclaim", "Retest", "S/R Bounce (H/D)"] },
+        { text: "Direction", type: "dd", deletable: true, options: ["Long", "Short"] },
+        { text: "Entry Price", type: "money", deletable: true },
+        { text: "Stop Loss", type: "money", deletable: true },
+        { text: "Target Price", type: "money", deletable: true },
+        { text: "Exit Price", type: "money", deletable: true },
+        { text: "Exit Type", type: "dd", deletable: true, options: ["Stop", "Target", "Manual", "Trail", "Breakeven", "Time Stop", "Other"] },
+        { text: "Exit Reason", type: "dd", deletable: true, options: ["Signal Invalidation", "Volume Divergence", "Time-based Exit", "Emotional", "Took Profits Early", "Other", "Profit/Stop/Target", "Momentum Loss", "Resistance"] },
+        { text: "Filled Position", type: "money", deletable: true },
+        { text: "Leverage", type: "leverage", deletable: true },
+        { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
+        { text: "Deposit/(Withdrawal) [Optional]", type: "money", deletable: true },
+        { text: "System Adherence", type: "dd", deletable: true, options: ["Followed", "Minor Deviation", "Major Deviation"] },
+        { text: "Mistake Tag", type: "dd", deletable: true, options: ["FOMO Entry", "Late Entry", "Early Entry", "Wrong Bias", "Impulse Trade", "News Chase", "Over-Sized", "Under-Sized", "No Stop", "Loose Stop", "Moved Stop (Too Wide)", "Moved Stop (Too Soon)", "Over-Leveraged", "Early Exit", "Cut Winner", "Held Too Long", "Exit on Emotion", "Overtrading", "Missed Setup", "Rule Break", "Revenge Trade", "Tilt / Emotional", "Choppy Conditions"] },
+        { text: "Deviation Notes", type: "32char", deletable: true },
+        { text: "Screenshot Link", type: "32char", deletable: true },
+        { text: "Entry Emotion", type: "dd", deletable: true, options: ["Confident", "Uncertain", "FOMO", "Revenge", "Calm", "Anxious", "Frustrated", "Satisfied", "Tired", "Real Life Stress", "Sick"] },
+        { text: "Exit Emotion", type: "dd", deletable: true, options: ["Confident", "Uncertain", "FOMO", "Revenge", "Calm", "Anxious", "Frustrated", "Satisfied", "Tired", "Real Life Stress", "Sick"] },
+        { text: "Notes/Lesson Learned", type: "32char", deletable: true },
         // Review Notes
         { text: "Leverage", type: "leverage", deletable: true },
         { text: "Sleep quality", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
@@ -1281,14 +1312,16 @@
         const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs');
         const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Trend') - personalInfoCount;
         const midTradeCount = defaultTemplate.findIndex(item => item.text === 'RSI') - (personalInfoCount + preTradeCount);
-        const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Leverage') - (personalInfoCount + preTradeCount + midTradeCount);
+        const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Outcome') - (personalInfoCount + preTradeCount + midTradeCount);
+        const executionCount = defaultTemplate.findIndex(item => item.text === 'Leverage') - (personalInfoCount + preTradeCount + midTradeCount + postTradeCount);
 
         const structureGroups = {
             personal: structure.slice(0, personalInfoCount),
             pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
             mid: structure.slice(personalInfoCount + preTradeCount, personalInfoCount + preTradeCount + midTradeCount),
             post: structure.slice(personalInfoCount + preTradeCount + midTradeCount, personalInfoCount + preTradeCount + midTradeCount + postTradeCount),
-            review: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount)
+            execution: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount, personalInfoCount + preTradeCount + midTradeCount + postTradeCount + executionCount),
+            review: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount + executionCount)
         };
 
         if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
