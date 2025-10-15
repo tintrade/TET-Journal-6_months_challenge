@@ -759,6 +759,30 @@
                     <h3 class="trade-group-header" aria-expanded="false">Execution <span class="collapse-icon-main">+</span></h3>
                     <div id="execution-tab" class="tab-content">
                         <div id="execution-items" class="checklist-group-items"></div>
+                    <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
+                        <div class="checklist-item">
+                            <span class="item-text">Triggered Limit Order Screenshot</span>
+                            <div class="upload-controls-container">
+                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
+                            </div>
+                            <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
+                        </div>
+                        <img class="screenshot-preview">
+                    </div>
+                    <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
+                        <div class="checklist-item">
+                            <span class="item-text">Executed Market Order Screenshot</span>
+                            <div class="upload-controls-container">
+                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
+                            </div>
+                            <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
+                        </div>
+                        <img class="screenshot-preview">
+                    </div>
                     </div>
                 </div>
 
@@ -766,30 +790,6 @@
                     <h3 class="trade-group-header" aria-expanded="false">Mid-Trade <span class="collapse-icon-main">+</span></h3>
                     <div id="mid-trade-tab" class="tab-content">
                         <div id="mid-trade-items" class="checklist-group-items"></div>
-                        <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
-                            <div class="checklist-item">
-                                <span class="item-text">Triggered Limit Order Screenshot</span>
-                                <div class="upload-controls-container">
-                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                    <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
-                                </div>
-                                <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
-                            </div>
-                            <img class="screenshot-preview">
-                        </div>
-                        <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
-                            <div class="checklist-item">
-                                <span class="item-text">Executed Market Order Screenshot</span>
-                                <div class="upload-controls-container">
-                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                    <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
-                                </div>
-                                <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
-                            </div>
-                            <img class="screenshot-preview">
-                        </div>
                         <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
                             <div class="checklist-item">
                                 <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
@@ -967,21 +967,22 @@
         { text: "Limit Order Screenshot Link", type: "2000char", deletable: true },
         // Execution
         { text: "Margin in USD", type: "money", deletable: false },
-        { text: "Triggered Limit Order Screenshot", type: "32char", deletable: true },
-        { text: "Executed Market Order Screenshot", type: "32char", deletable: true },
-        { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
-        { text: "Leverage", type: "leverage", deletable: true },
         { text: "Entry Date/Local Time", type: "datetime", deletable: true },
+        { text: "Filled Position Size", type: "money", deletable: true },
+        { text: "Leverage", type: "leverage", deletable: true },
+        { text: "Margin in USD", type: "money", deletable: false },
+        { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
         { text: "Entry Price", type: "money12", deletable: true },
         { text: "Stop Loss", type: "money12", deletable: true },
         { text: "Target Price", type: "money12", deletable: true },
-        { text: "Exit Price", type: "money12", deletable: true },
-        { text: "Filled Position Size", type: "money", deletable: true },
+        { text: "Triggered Limit Order Screenshot Link", type: "2000char", deletable: true },
+        { text: "Executed Market Order Screenshot Link", type: "2000char", deletable: true },
         // Mid-Trade
         { text: "Stop-Loss and/or TP Adjusted Screenshot Link", type: "2000char", deletable: true },
         // Post-Trade
-        { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
         { text: "Exit Date/Local Time", type: "datetime", deletable: true },
+        { text: "Exit Price", type: "money12", deletable: true },
+        { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
         { text: "Deposit / Withdrawal", type: "money", deletable: true },
         { text: "Position Closed Screenshot Link", type: "2000char", deletable: true },
         // Review Notes
@@ -1314,9 +1315,8 @@
         const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs / Symbol');
         const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Margin in USD') - personalInfoCount;
         const executionCount = defaultTemplate.findIndex(item => item.text === 'Stop-Loss and/or TP Adjusted Screenshot Link') - (personalInfoCount + preTradeCount);
-        const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Outcome') - (personalInfoCount + preTradeCount + executionCount);
+        const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Exit Date/Local Time') - (personalInfoCount + preTradeCount + executionCount);
         const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Sleep Quality at Exit') - (personalInfoCount + preTradeCount + executionCount + midTradeCount);
-        const reviewCount = defaultTemplate.length - (personalInfoCount + preTradeCount + executionCount + midTradeCount + postTradeCount);
         const structureGroups = {
             personal: structure.slice(0, personalInfoCount),
             pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
@@ -1777,7 +1777,11 @@
             const dollarsInput = item.querySelector('.money-input.dollars');
             const centsInput = item.querySelector('.money-input.cents');
             const leverageInput = item.querySelector('.leverage-input');
-            if (itemButton && itemButton.dataset.type === 'yn') {
+            const dateTimeDropdowns = item.querySelectorAll('.date-dropdown');
+            if (dateTimeDropdowns.length > 0) {
+                const values = Array.from(dateTimeDropdowns).map(d => d.value);
+                value = `${values[0]}/${values[1]}/${values[2]} ${values[3]}:${values[4]}:${values[5]}`;
+            } else if (itemButton && itemButton.dataset.type === 'yn') {
                 const state = itemButton.dataset.state;
                 if (state === 'checked') { value = "Yes"; } else if (state === 'unchecked') { value = "No"; }
             } else if (itemButton && itemButton.dataset.type === 'ls') {
