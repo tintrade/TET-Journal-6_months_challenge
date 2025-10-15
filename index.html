@@ -987,7 +987,12 @@
         { text: "Position Closed Screenshot Link", type: "2000char", deletable: true },
         // Review Notes
         { text: "Sleep Quality at Exit", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
-        { text: "Mood at Exit", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] }
+        { text: "Mood at Exit", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
+        { text: "System Adherence", type: "dd", deletable: true, options: ["Followed", "Minor Deviation", "Major Deviation"] },
+        { text: "Mistake Tag", type: "dd", deletable: true, options: ["FOMO Entry", "Late Entry", "Early Entry", "Wrong Bias", "Impulse Trade", "News Chase", "Over-Sized", "Under-Sized", "No Stop", "Loose Stop", "Moved Stop (Too Wide)", "Moved Stop (Too Soon)", "Over-Leveraged", "Early Exit", "Cut Winner", "Held Too Long", "Exit on Emotion", "Overtrading", "Missed Setup", "Rule Break", "Revenge Trade", "Tilt / Emotional", "Choppy Conditions"] },
+        { text: "Deviation Notes", type: "32char", deletable: true },
+        { text: "Exit Emotion", type: "dd", deletable: true, options: ["Confident", "Uncertain", "FOMO", "Revenge", "Calm", "Anxious", "Frustrated", "Satisfied", "Tired", "Real Life Stress", "Sick"] },
+        { text: "Notes/Lesson Learned", type: "32char", deletable: true }
     ];
 
     let screenshotData = {
@@ -1317,6 +1322,7 @@
         const executionCount = defaultTemplate.findIndex(item => item.text === 'Stop-Loss and/or TP Adjusted Screenshot Link') - (personalInfoCount + preTradeCount);
         const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Exit Date/Local Time') - (personalInfoCount + preTradeCount + executionCount);
         const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Sleep Quality at Exit') - (personalInfoCount + preTradeCount + executionCount + midTradeCount);
+        const reviewCount = defaultTemplate.length - (personalInfoCount + preTradeCount + executionCount + midTradeCount + postTradeCount);
         const structureGroups = {
             personal: structure.slice(0, personalInfoCount),
             pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
