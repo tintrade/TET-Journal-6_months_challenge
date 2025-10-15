@@ -293,7 +293,7 @@
         .char-input, .leverage-input, .char-input-2000 { text-align: center; }
         .char-input { width: 80px; }
         .char-input-long { width: 200px; }
-        .char-input-2000 { width: 200px; }
+        .char-input-2000 { width: 200px; color: var(--text-color); }
         .leverage-input { width: 45px; }
 
         .money-input-container {
@@ -306,7 +306,7 @@
         .money-input-container span { color: var(--text-color); font-weight: bold; }
         .money-input { text-align: right; margin-right: 0; }
         .money-input.dollars { width: 80px; }
-        .money-input.cents { width: 35px; }
+        .money-input.cents { width: 120px; }
 
         .delete-btn {
             background: none;
@@ -972,7 +972,6 @@
         { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
         { text: "Leverage", type: "leverage", deletable: true },
         { text: "Entry Date/Local Time", type: "datetime", deletable: true },
-        { text: "Exit Date/Local Time", type: "datetime", deletable: true },
         { text: "Entry Price", type: "money12", deletable: true },
         { text: "Stop Loss", type: "money12", deletable: true },
         { text: "Target Price", type: "money12", deletable: true },
@@ -982,6 +981,7 @@
         { text: "Stop-Loss and/or TP Adjusted Screenshot Link", type: "2000char", deletable: true },
         // Post-Trade
         { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
+        { text: "Exit Date/Local Time", type: "datetime", deletable: true },
         { text: "Deposit / Withdrawal", type: "money", deletable: true },
         { text: "Position Closed Screenshot Link", type: "2000char", deletable: true },
         // Review Notes
@@ -1316,7 +1316,7 @@
         const executionCount = defaultTemplate.findIndex(item => item.text === 'Stop-Loss and/or TP Adjusted Screenshot Link') - (personalInfoCount + preTradeCount);
         const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Outcome') - (personalInfoCount + preTradeCount + executionCount);
         const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Sleep Quality at Exit') - (personalInfoCount + preTradeCount + executionCount + midTradeCount);
-
+        const reviewCount = defaultTemplate.length - (personalInfoCount + preTradeCount + executionCount + midTradeCount + postTradeCount);
         const structureGroups = {
             personal: structure.slice(0, personalInfoCount),
             pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
