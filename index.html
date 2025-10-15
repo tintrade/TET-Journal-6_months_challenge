@@ -665,6 +665,26 @@
         @media (max-width: 900px) {
             .app-container { flex-direction: column; }
             .sidebar-column { position: static; top: 0; width: 100%; }
+            .tabs { display: none; }
+            .trade-group-header { display: flex; }
+            .tab-content {
+                display: block;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-in-out;
+                padding-top: 0;
+            }
+            .trade-group.active .tab-content {
+                max-height: 1000px;
+                padding-top: 15px;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .trade-group-header { display: none; }
+            .tabs { display: flex; }
+            .tab-content { display: none; }
+            .tab-content.active { display: block; }
         }
     </style>
 </head>
@@ -693,106 +713,123 @@
                     <button class="tab-link" data-tab="review-notes-tab">Review Notes</button>
                 </div>
 
-                <div id="personal-info-tab" class="tab-content active">
-                    <p class="info-block paste-hint">
-                        You don't have to fill out every field. It's sufficient to only input the data that suits you—what you're interested in, care about, use, and wish to record or turn into statistical data later.
-                    </p>
-                    <div id="personal-info-items" class="checklist-group-items"></div>
-                </div>
-
-                <div id="pre-trade-tab" class="tab-content">
-                    <div id="pre-trade-items" class="checklist-group-items"></div>
-                    <div class="screenshot-row" data-key="preTrade" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Pre-Trade Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-preTrade" class="upload-button-label">Upload File</label>
-                            </div>
-                            <input type="file" id="screenshot-input-preTrade" class="screenshot-input" accept="image/*">
-                        </div>
-                        <img class="screenshot-preview">
-                    </div>
-                    <div class="screenshot-row" data-key="limitOrder" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Limit Order Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-limitOrder" class="upload-button-label">Upload File</label>
-                            </div>
-                            <input type="file" id="screenshot-input-limitOrder" class="screenshot-input" accept="image/*">
-                        </div>
-                        <img class="screenshot-preview">
+                <div class="trade-group active">
+                    <h3 class="trade-group-header" aria-expanded="true">Personal Info <span class="collapse-icon-main">+</span></h3>
+                    <div id="personal-info-tab" class="tab-content active">
+                        <p class="info-block paste-hint">
+                            You don't have to fill out every field. It's sufficient to only input the data that suits you—what you're interested in, care about, use, and wish to record or turn into statistical data later.
+                        </p>
+                        <div id="personal-info-items" class="checklist-group-items"></div>
                     </div>
                 </div>
 
-                <div id="execution-tab" class="tab-content">
-                    <div id="execution-items" class="checklist-group-items"></div>
-                </div>
-
-                <div id="mid-trade-tab" class="tab-content">
-                    <div id="mid-trade-items" class="checklist-group-items"></div>
-                    <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Triggered Limit Order Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Pre-Trade <span class="collapse-icon-main">+</span></h3>
+                    <div id="pre-trade-tab" class="tab-content">
+                        <div id="pre-trade-items" class="checklist-group-items"></div>
+                        <div class="screenshot-row" data-key="preTrade" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Pre-Trade Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-preTrade" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-preTrade" class="screenshot-input" accept="image/*">
                             </div>
-                            <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
+                            <img class="screenshot-preview">
                         </div>
-                        <img class="screenshot-preview">
-                    </div>
-                    <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Executed Market Order Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
+                        <div class="screenshot-row" data-key="limitOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Limit Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-limitOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-limitOrder" class="screenshot-input" accept="image/*">
                             </div>
-                            <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
+                            <img class="screenshot-preview">
                         </div>
-                        <img class="screenshot-preview">
-                    </div>
-                    <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-slTpAdjusted" class="upload-button-label">Upload File</label>
-                            </div>
-                            <input type="file" id="screenshot-input-slTpAdjusted" class="screenshot-input" accept="image/*">
-                        </div>
-                        <img class="screenshot-preview">
                     </div>
                 </div>
 
-                <div id="post-trade-tab" class="tab-content">
-                    <div id="post-trade-items" class="checklist-group-items"></div>
-                    <div class="screenshot-row" data-key="positionClosed" tabindex="0">
-                        <div class="checklist-item">
-                            <span class="item-text">Position Closed Screenshot</span>
-                            <div class="upload-controls-container">
-                                <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                <label for="screenshot-input-positionClosed" class="upload-button-label">Upload File</label>
-                            </div>
-                            <input type="file" id="screenshot-input-positionClosed" class="screenshot-input" accept="image/*">
-                        </div>
-                        <img class="screenshot-preview">
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Execution <span class="collapse-icon-main">+</span></h3>
+                    <div id="execution-tab" class="tab-content">
+                        <div id="execution-items" class="checklist-group-items"></div>
                     </div>
                 </div>
 
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Mid-Trade <span class="collapse-icon-main">+</span></h3>
+                    <div id="mid-trade-tab" class="tab-content">
+                        <div id="mid-trade-items" class="checklist-group-items"></div>
+                        <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Triggered Limit Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Executed Market Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-slTpAdjusted" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-slTpAdjusted" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                    </div>
+                </div>
 
-                <div id="review-notes-tab" class="tab-content">
-                    <div id="review-notes-items" class="checklist-group-items"></div>
-                    <div class="comments-container">
-                        <textarea id="comments-input" placeholder="Comments..." maxlength="1000" rows="3"></textarea>
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Post-Trade <span class="collapse-icon-main">+</span></h3>
+                    <div id="post-trade-tab" class="tab-content">
+                        <div id="post-trade-items" class="checklist-group-items"></div>
+                        <div class="screenshot-row" data-key="positionClosed" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Position Closed Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-positionClosed" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-positionClosed" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trade-group">
+                    <h3 class="trade-group-header" aria-expanded="false">Review Notes <span class="collapse-icon-main">+</span></h3>
+                    <div id="review-notes-tab" class="tab-content">
+                        <div id="review-notes-items" class="checklist-group-items"></div>
+                        <div class="comments-container">
+                            <textarea id="comments-input" placeholder="Comments..." maxlength="1000" rows="3"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1699,26 +1736,19 @@
         const listItems = document.querySelectorAll('#checklist-container .checklist-item');
         let summaryContent = "";
 
-        const tabLinks = document.querySelectorAll('.tab-link');
+        const groupHeaders = document.querySelectorAll('.trade-group-header');
         const itemsByGroup = {};
-        tabLinks.forEach(link => {
-            const tabName = link.textContent;
-            const tabId = link.getAttribute('data-tab');
-            const tabContent = document.getElementById(tabId);
-            if (tabContent && (tabContent.querySelector('.checklist-item') || tabContent.querySelector('.screenshot-row') || tabContent.querySelector('#comments-input'))) {
-                itemsByGroup[tabName] = [];
-            }
+        groupHeaders.forEach(h => {
+            const groupName = h.textContent.replace('+', '').trim();
+            itemsByGroup[groupName] = [];
         });
 
         listItems.forEach(item => {
-            const tabContent = item.closest('.tab-content');
-            if (!tabContent) return;
+            const groupContainer = item.closest('.trade-group');
+            if (!groupContainer) return;
+            const groupHeader = groupContainer.querySelector('.trade-group-header');
+            const groupName = groupHeader.textContent.replace('+', '').trim();
 
-            const tabId = tabContent.id;
-            const tabLink = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
-            if (!tabLink) return;
-
-            const groupName = tabLink.textContent;
             const text = item.querySelector('.item-text').textContent;
             let value = "";
             const itemButton = item.querySelector('.three-state-button');
@@ -1818,6 +1848,18 @@
                 ghostClass: 'sortable-ghost',
                 onEnd: function() {
                     updateSummaryText();
+                }
+            });
+        });
+
+        // Accordion functionality for mobile
+        const mainCollapsibleHeaders = document.querySelectorAll('.trade-group-header');
+        mainCollapsibleHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                if (window.innerWidth <= 900) {
+                    const parentGroup = this.parentElement;
+                    const isNowActive = parentGroup.classList.toggle('active');
+                    this.setAttribute('aria-expanded', isNowActive);
                 }
             });
         });
