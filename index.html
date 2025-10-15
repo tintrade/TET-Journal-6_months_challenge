@@ -1710,7 +1710,7 @@
             const tabName = link.textContent;
             const tabId = link.getAttribute('data-tab');
             const tabContent = document.getElementById(tabId);
-            if (tabContent.querySelector('.checklist-item, .screenshot-row, #comments-input')) {
+            if (tabContent && (tabContent.querySelector('.checklist-item') || tabContent.querySelector('.screenshot-row') || tabContent.querySelector('#comments-input'))) {
                 itemsByGroup[tabName] = [];
             }
         });
