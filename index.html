@@ -695,7 +695,7 @@
     <div class="content-column panel">
         <div id="capture-area">
             <div class="header">
-                <span class="title-text">TRADING JOURNAL ENTRY</span>
+                <span class="title-text">TACTICAL EDGE TRADING JOURNAL Single Trade Web Entry V1.02</span>
                 <div class="header-controls">
                     <label class="theme-switch">
                         <input type="checkbox" id="theme-toggle">
@@ -956,7 +956,16 @@
             'UTC-12: International Date Line West'
         ]},
         // Pre-Trade
-        { text: "Instrument / Pairs / Symbol", type: "32char", deletable: true },
+        { text: "Instrument / Pair / Symbol", type: "32char", deletable: true },
+        { text: "Session", type: "dd", deletable: true, options: ["NY Pre", "NY Open", "NY Lunch", "NY Afternoon", "ASIA", "London", "Weekend", "Holiday", "Between Sessions"] },
+        { text: "Macro Market Direction", type: "np", deletable: true },
+        { text: "News Direction", type: "np", deletable: true },
+        { text: "News", type: "dd", deletable: true, options: ["Jobs (NFP or other)", "CPI/PPI/Inflation", "FOMC / Fed Rates", "Fed Speakers", "GDP", "Retail Sales", "ISM / PMI", "Big Earnings", "OPEC / Oil News", "Treasury Yields / Auction", "Breaking News", "Regulatory Headlines", "Geopolitical Events", "Black Swan Event", "Other", "None"] },
+        { text: "Setup Grade", type: "dd", deletable: true, options: ["A", "B", "C", "D", "F"] },
+        { text: "Confidence", type: "dd", deletable: true, options: ["High", "Medium", "Low"] },
+        { text: "Bias", type: "dd", deletable: true, options: ["Long", "Short", "Neutral"] },
+        { text: "Setup Type", type: "dd", deletable: true, options: ["Breakout", "Reversal", "Continuation", "Reversion", "SFP/Sweep", "VWAP Bounce", "Diagonal Break", "Range Play", "Reclaim", "Retest", "S/R Bounce (H/D)"] },
+        { text: "Direction", type: "dd", deletable: true, options: ["Long", "Short"] },
         { text: "Trend", type: "yn", deletable: true },
         { text: "Volume/CVD", type: "yn", deletable: true },
         { text: "Momentum", type: "yn", deletable: true },
@@ -1317,7 +1326,7 @@
         };
         Object.values(groupContainers).forEach(c => c.innerHTML = '');
 
-        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs / Symbol');
+        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pair / Symbol');
         const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Margin in USD') - personalInfoCount;
         const executionCount = defaultTemplate.findIndex(item => item.text === 'Stop-Loss and/or TP Adjusted Screenshot Link') - (personalInfoCount + preTradeCount);
         const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Exit Date/Local Time') - (personalInfoCount + preTradeCount + executionCount);
@@ -1612,8 +1621,7 @@
         const contentTimestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dayName} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
         const headerLines = [
-            "Trade No:", `Position opening: ${contentTimestamp}`, "Position closing:",
-            "Profit amount in USD:", "Margin-based profit percentage:", "Loss amount in USD:", "Margin-based loss percentage:"
+            `Entry copy / download time: ${contentTimestamp}`
         ];
         let finalContentArray = [...headerLines];
         if (listContent.trim()) {
