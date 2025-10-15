@@ -77,7 +77,7 @@
             margin: 0 auto;
             align-items: flex-start;
         }
-        
+
         .panel {
             background-color: var(--container-bg);
             border-radius: 10px;
@@ -85,7 +85,7 @@
             padding: 20px;
             transition: background-color 0.3s;
         }
-        
+
         .content-column {
             flex: 2;
         }
@@ -95,7 +95,7 @@
             position: sticky;
             top: 20px;
         }
-        
+
         .sidebar-section {
             margin-bottom: 15px;
         }
@@ -140,7 +140,7 @@
             font-weight: bold;
             color: var(--text-color);
         }
-        
+
         .trade-group {
             margin-bottom: 0;
         }
@@ -208,7 +208,7 @@
             cursor: grab;
         }
         .checklist-item:last-child { border-bottom: none; }
-        
+
         .sortable-ghost {
             opacity: 0.4;
             background-color: var(--ghost-bg-color);
@@ -234,7 +234,7 @@
             cursor: pointer;
             margin-right: 10px;
         }
-        
+
         .three-state-button[data-type="yn"],
         .three-state-button[data-type="pn"],
         .three-state-button[data-type="ls"] {
@@ -267,7 +267,7 @@
 
         .three-state-button[data-type="np"] .text-negative { color: var(--unchecked-state-color); }
         .three-state-button[data-type="np"] .text-positive { color: var(--checked-state-color); }
-        
+
         .three-state-button.checked .is-unchecked-option { opacity: 0; }
         .three-state-button.unchecked .is-checked-option { opacity: 0; }
 
@@ -275,7 +275,7 @@
         .three-state-button.unchecked .button-content {
             color: white;
         }
-        
+
         .dropdown, .char-input, .char-input-long, #comments-input, .money-input, .leverage-input, #template-name-input, #template-select {
             margin-right: 10px;
             height: 25px;
@@ -294,7 +294,7 @@
         .char-input { width: 80px; }
         .char-input-long { width: 200px; }
         .leverage-input { width: 45px; }
-        
+
         .money-input-container {
             display: flex;
             align-items: center;
@@ -321,7 +321,7 @@
             align-items: center;
         }
         .delete-btn:hover { color: var(--delete-btn-hover-color); }
-        
+
         #summary-text {
             width: 100%; height: 150px; padding: 10px;
             border: 1px solid var(--border-color); border-radius: 5px;
@@ -366,13 +366,13 @@
             transition: background-color 0.2s;
         }
         .summary-actions button:hover { background-color: var(--copy-btn-hover-bg); }
-        
+
         .comments-container { padding-top: 10px; }
         #comments-input {
             width: 100%; height: auto; font-family: inherit; padding: 8px;
             resize: vertical; margin-right: 0;
         }
-        
+
         /* Sidebar Collapsible */
         .collapsible-header {
             margin: 0;
@@ -397,13 +397,13 @@
             padding-top: 0;
         }
         .sidebar-section.active .collapsible-content {
-            max-height: 1000px; 
+            max-height: 1000px;
             padding-top: 15px;
         }
         .sidebar-section.active .collapse-icon {
             transform: rotate(45deg);
         }
-        
+
         /* Main Content Collapsible using CSS Grid */
         .collapse-icon-main {
             font-size: 1.5em;
@@ -465,10 +465,10 @@
             display: flex;
             align-items: center;
         }
-        .template-row .file-upload-label { height: 35px; line-height: 35px; } 
+        .template-row .file-upload-label { height: 35px; line-height: 35px; }
 
         .template-row button:hover, .template-row .file-upload-label:hover, .paste-button:hover, .upload-button-label:hover { background-color: var(--action-btn-hover-bg); }
-        
+
         #delete-template-btn { background-color: var(--delete-action-btn-bg); }
         #delete-template-btn:hover { background-color: var(--delete-action-btn-hover-bg); }
         #upload-template-input, #merge-txt-input, #merge-pdf-input, #merge-pdfs-input { display: none; }
@@ -482,7 +482,7 @@
             margin-top: 10px;
             display: none;
         }
-        
+
         .upload-controls-container {
             display: flex;
             align-items: center;
@@ -494,7 +494,7 @@
             color: var(--secondary-text-color);
             font-style: italic;
         }
-        
+
         .info-block {
             margin: 20px 5px 10px 5px;
             text-align: center;
@@ -524,7 +524,7 @@
 
         .toast.success { background-color: var(--action-btn-bg); }
         .toast.error { background-color: var(--delete-action-btn-bg); }
-        
+
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%); } }
 
@@ -562,6 +562,61 @@
             margin-top: 0;
             margin-bottom: 10px;
             color: var(--text-color);
+        }
+
+        /* Tab container */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 15px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Individual tab buttons */
+        .tab-link {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--secondary-text-color);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            transition: color 0.3s, border-bottom-color 0.3s;
+            flex-shrink: 0;
+        }
+
+        /* Tab button on hover */
+        .tab-link:hover {
+            color: var(--text-color);
+        }
+
+        /* Active tab button */
+        .tab-link.active {
+            color: var(--text-color);
+            border-bottom-color: var(--button-bg);
+        }
+
+        /* Tab content panels */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        /* Active/visible tab content panel */
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .modal-content p {
             margin-bottom: 20px;
@@ -621,170 +676,130 @@
             <div class="header">
                 <span class="title-text">TRADING JOURNAL ENTRY</span>
                 <div class="header-controls">
-                    <button id="expand-all-btn" class="header-btn" aria-label="Expand all groups">
-                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
-                          <circle cx="12" cy="12" r="7" stroke-width="2" />
-                          <circle cx="12" cy="12" r="11" stroke-width="2.5" />
-                        </svg>
-                    </button>
-                    <button id="collapse-all-btn" class="header-btn" aria-label="Collapse all groups">
-                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
-                          <circle cx="12" cy="12" r="7" stroke-width="1.5" />
-                          <circle cx="12" cy="12" r="11" stroke-width="1" />
-                        </svg>
-                    </button>
                     <label class="theme-switch">
                         <input type="checkbox" id="theme-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
             </div>
-            
+
             <div id="checklist-container">
-                <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Personal Info <span class="collapse-icon-main">+</span></h3>
-                    <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="personal-info-items" class="checklist-group-items"></div>
-                        </div>
-                    </div>
+                <div class="tabs">
+                    <button class="tab-link active" data-tab="personal-info-tab">Personal Info</button>
+                    <button class="tab-link" data-tab="pre-trade-tab">Pre-Trade</button>
+                    <button class="tab-link" data-tab="execution-tab">Execution</button>
+                    <button class="tab-link" data-tab="mid-trade-tab">Mid-Trade</button>
+                    <button class="tab-link" data-tab="post-trade-tab">Post-Trade</button>
+                    <button class="tab-link" data-tab="screenshots-tab">Screenshots</button>
+                    <button class="tab-link" data-tab="review-notes-tab">Review Notes</button>
                 </div>
 
-                <p class="info-block paste-hint">
-                    You don't have to fill out every field. It's sufficient to only input the data that suits you—what you're interested in, care about, use, and wish to record or turn into statistical data later.
-                </p>
-
-                <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Pre-Trade <span class="collapse-icon-main">+</span></h3>
-                     <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="pre-trade-items" class="checklist-group-items"></div>
-                        </div>
-                    </div>
+                <div id="personal-info-tab" class="tab-content active">
+                    <p class="info-block paste-hint">
+                        You don't have to fill out every field. It's sufficient to only input the data that suits you—what you're interested in, care about, use, and wish to record or turn into statistical data later.
+                    </p>
+                    <div id="personal-info-items" class="checklist-group-items"></div>
                 </div>
 
-                <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Execution <span class="collapse-icon-main">+</span></h3>
-                    <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="execution-items" class="checklist-group-items"></div>
-                        </div>
-                    </div>
+                <div id="pre-trade-tab" class="tab-content">
+                    <div id="pre-trade-items" class="checklist-group-items"></div>
                 </div>
 
-                <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Mid-Trade <span class="collapse-icon-main">+</span></h3>
-                    <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="mid-trade-items" class="checklist-group-items"></div>
-                        </div>
-                    </div>
+                <div id="execution-tab" class="tab-content">
+                    <div id="execution-items" class="checklist-group-items"></div>
                 </div>
-                <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Post-Trade <span class="collapse-icon-main">+</span></h3>
-                     <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="post-trade-items" class="checklist-group-items"></div>
-                        </div>
-                    </div>
+
+                <div id="mid-trade-tab" class="tab-content">
+                    <div id="mid-trade-items" class="checklist-group-items"></div>
                 </div>
-                
-                 <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Screenshots <span class="collapse-icon-main">+</span></h3>
-                    <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="screenshots-items" class="checklist-group-items">
-                                <div class="screenshot-row" data-key="preTrade" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Pre-Trade Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-preTrade" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-preTrade" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
+
+                <div id="post-trade-tab" class="tab-content">
+                    <div id="post-trade-items" class="checklist-group-items"></div>
+                </div>
+
+                <div id="screenshots-tab" class="tab-content">
+                    <div id="screenshots-items" class="checklist-group-items">
+                        <div class="screenshot-row" data-key="preTrade" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Pre-Trade Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-preTrade" class="upload-button-label">Upload File</label>
                                 </div>
-                                <div class="screenshot-row" data-key="limitOrder" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Limit Order Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-limitOrder" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-limitOrder" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
-                                </div>
-                                <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Triggered Limit Order Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
-                                </div>
-                                <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Executed Market Order Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
-                                </div>
-                                <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-slTpAdjusted" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-slTpAdjusted" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
-                                </div>
-                                <div class="screenshot-row" data-key="positionClosed" tabindex="0">
-                                    <div class="checklist-item">
-                                        <span class="item-text">Position Closed Screenshot</span>
-                                        <div class="upload-controls-container">
-                                            <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
-                                            <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
-                                            <label for="screenshot-input-positionClosed" class="upload-button-label">Upload File</label>
-                                        </div>
-                                        <input type="file" id="screenshot-input-positionClosed" class="screenshot-input" accept="image/*">
-                                    </div>
-                                    <img class="screenshot-preview">
-                                </div>
+                                <input type="file" id="screenshot-input-preTrade" class="screenshot-input" accept="image/*">
                             </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="limitOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Limit Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-limitOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-limitOrder" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="triggeredLimitOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Triggered Limit Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-triggeredLimitOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-triggeredLimitOrder" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="executedMarketOrder" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Executed Market Order Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-executedMarketOrder" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-executedMarketOrder" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="slTpAdjusted" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Stop-Loss and/or TP Adjusted Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-slTpAdjusted" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-slTpAdjusted" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
+                        </div>
+                        <div class="screenshot-row" data-key="positionClosed" tabindex="0">
+                            <div class="checklist-item">
+                                <span class="item-text">Position Closed Screenshot</span>
+                                <div class="upload-controls-container">
+                                    <span class="paste-hint">Click here & press Ctrl + V</span><span class="upload-separator">or</span>
+                                    <button class="paste-button">Paste!</button><span class="upload-separator">or</span>
+                                    <label for="screenshot-input-positionClosed" class="upload-button-label">Upload File</label>
+                                </div>
+                                <input type="file" id="screenshot-input-positionClosed" class="screenshot-input" accept="image/*">
+                            </div>
+                            <img class="screenshot-preview">
                         </div>
                     </div>
                 </div>
 
-                 <div class="trade-group">
-                    <h3 class="trade-group-header" aria-expanded="false">Review Notes <span class="collapse-icon-main">+</span></h3>
-                    <div class="collapsible-content-main">
-                        <div class="collapsible-inner-wrapper">
-                            <div id="review-notes-items" class="checklist-group-items"></div>
-                        </div>
+                <div id="review-notes-tab" class="tab-content">
+                    <div id="review-notes-items" class="checklist-group-items"></div>
+                    <div class="comments-container">
+                        <textarea id="comments-input" placeholder="Comments..." maxlength="1000" rows="3"></textarea>
                     </div>
                 </div>
-            </div>
-
-            <div class="comments-container">
-                <textarea id="comments-input" placeholder="Comments..." maxlength="1000" rows="3"></textarea>
             </div>
         </div>
     </div>
@@ -827,7 +842,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="panel sidebar-section">
             <h3 class="collapsible-header">
                 <span>Add Items</span>
@@ -909,21 +924,21 @@
         ]},
         // Pre-Trade
         { text: "Instrument / Pairs", type: "32char", deletable: true },
-        { text: "Macro Market", type: "np", deletable: true }, 
+        { text: "Macro Market", type: "np", deletable: true },
         { text: "News", type: "np", deletable: true },
         { text: "Session", type: "dd", deletable: true, options: ["New York", "Asia", "London"] },
         { text: "Levels", type: "yn", deletable: true },
         // Mid-Trade
-        { text: "Trend", type: "yn", deletable: true }, 
+        { text: "Trend", type: "yn", deletable: true },
         { text: "Volume/CVD", type: "yn", deletable: true },
         { text: "Momentum", type: "yn", deletable: true },
         // Post-Trade
-        { text: "RSI", type: "7char", deletable: true }, 
+        { text: "RSI", type: "7char", deletable: true },
         { text: "Plan/Setup", type: "yn", deletable: true },
-        { text: "Long/Short", type: "ls", deletable: false }, 
+        { text: "Long/Short", type: "ls", deletable: false },
         { text: "Margin in USD", type: "money", deletable: false },
         // Review Notes
-        { text: "Leverage", type: "leverage", deletable: true }, 
+        { text: "Leverage", type: "leverage", deletable: true },
         { text: "Sleep quality", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
         { text: "Mood", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] }
     ];
@@ -952,7 +967,7 @@
         toast.className = `toast ${type}`;
         toast.textContent = message;
         toastContainer.appendChild(toast);
-        setTimeout(() => { toast.remove(); }, 4000); 
+        setTimeout(() => { toast.remove(); }, 4000);
     }
 
     function showConfirmModal(title, message, confirmText = 'Confirm') {
@@ -987,7 +1002,7 @@
             document.getElementById('modal-message').textContent = message;
             const inputContainer = document.getElementById('modal-input-container');
             inputContainer.innerHTML = `<input type="text" id="modal-prompt-input" value="${defaultValue}">`;
-            
+
             const confirmBtn = document.getElementById('modal-confirm-btn');
             const cancelBtn = document.getElementById('modal-cancel-btn');
             confirmBtn.textContent = 'Save';
@@ -1009,7 +1024,7 @@
             confirmBtn.onclick = () => resolvePromise(input.value.trim());
             cancelBtn.onclick = () => resolvePromise(null);
             input.onkeydown = (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); confirmBtn.click(); } 
+                if (e.key === 'Enter') { e.preventDefault(); confirmBtn.click(); }
                 else if (e.key === 'Escape') { cancelBtn.click(); }
             };
         });
@@ -1026,7 +1041,7 @@
         const clickX = event.clientX - rect.left;
         const middle = rect.width / 2;
         if (currentState === 'neutral') {
-            if (clickX > middle) { button.classList.add('checked'); button.dataset.state = 'checked'; } 
+            if (clickX > middle) { button.classList.add('checked'); button.dataset.state = 'checked'; }
             else { button.classList.add('unchecked'); button.dataset.state = 'unchecked'; }
         } else {
             button.classList.remove('checked', 'unchecked');
@@ -1045,20 +1060,11 @@
             showToast('Item deleted.');
         }
     }
-    
-    function toggleAllMainGroups(expandState) {
-        document.querySelectorAll('.trade-group').forEach(group => {
-            group.classList.toggle('active', expandState);
-            group.querySelector('.trade-group-header').setAttribute('aria-expanded', expandState);
-        });
-    }
 
     async function resetAllValues() {
         const confirmed = await showConfirmModal('Reset All Values', 'Are you sure you want to clear all inputs and reset all values to default? (Personal Info will not be reset)', 'Reset');
         if (confirmed) {
-            toggleAllMainGroups(false);
-
-            const groupsToReset = document.querySelectorAll('.trade-group:not(:first-child) .checklist-group-items:not(#screenshots-items)');
+            const groupsToReset = document.querySelectorAll('.tab-content:not(#personal-info-tab) .checklist-group-items:not(#screenshots-items)');
             groupsToReset.forEach(group => {
                 group.querySelectorAll('.three-state-button').forEach(btn => {
                     btn.classList.remove('checked', 'unchecked');
@@ -1067,9 +1073,9 @@
                 group.querySelectorAll('.dropdown').forEach(sel => sel.value = '');
                 group.querySelectorAll('.char-input, .char-input-long, .money-input, .leverage-input').forEach(inp => inp.value = '');
             });
-            
+
             document.getElementById('comments-input').value = '';
-            
+
             Object.keys(screenshotData).forEach(key => {
                 screenshotData[key] = null;
                 const preview = document.querySelector(`.screenshot-row[data-key="${key}"] .screenshot-preview`);
@@ -1082,7 +1088,7 @@
             showToast('All values (except Personal Info) have been reset.');
         }
     }
-    
+
     function savePersistentValues() {
         const container = document.getElementById('personal-info-items');
         const items = container.querySelectorAll('.checklist-item');
@@ -1174,35 +1180,35 @@
         const newItem = document.createElement('div');
         newItem.className = 'checklist-item';
         let controlHtml = '';
-        
+
         const isPersistent = containerElement.id === 'personal-info-items';
         const onInputHandler = `oninput="updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"`;
         const onChangeHandler = `onchange="updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"`;
 
         switch(type) {
-            case 'yn': 
+            case 'yn':
                 controlHtml = `<div class="three-state-button" data-type="yn" data-state="neutral" role="button" tabindex="0">
                     <span class="button-content icon is-unchecked-option">×</span>
                     <span class="button-content icon is-checked-option">✓</span>
-                    <div class="button-overlay"></div></div>`; 
+                    <div class="button-overlay"></div></div>`;
                 break;
-            case 'pn': 
+            case 'pn':
                 controlHtml = `<div class="three-state-button" data-type="pn" data-state="neutral" role="button" tabindex="0">
                     <span class="button-content icon is-unchecked-option">-</span>
                     <span class="button-content icon is-checked-option">+</span>
-                    <div class="button-overlay"></div></div>`; 
+                    <div class="button-overlay"></div></div>`;
                 break;
-            case 'np': 
+            case 'np':
                 controlHtml = `<div class="three-state-button" data-type="np" data-state="neutral" role="button" tabindex="0">
                     <span class="button-content text text-negative is-unchecked-option">negative</span>
                     <span class="button-content text text-positive is-checked-option">positive</span>
-                    <div class="button-overlay"></div></div>`; 
+                    <div class="button-overlay"></div></div>`;
                 break;
-            case 'ls': 
+            case 'ls':
                 controlHtml = `<div class="three-state-button" data-type="ls" data-state="neutral" role="button" tabindex="0">
                     <span class="button-content icon is-unchecked-option">S</span>
                     <span class="button-content icon is-checked-option">L</span>
-                    <div class="button-overlay"></div></div>`; 
+                    <div class="button-overlay"></div></div>`;
                 break;
             case 'dd':
                 let optionsHtml = '<option value=""></option>';
@@ -1220,7 +1226,7 @@
         }
         const deleteButtonHtml = deletable ? `<button class="delete-btn">×</button>` : '';
         newItem.innerHTML = `<span class="item-text" contenteditable="true">${text}</span>${controlHtml}${deleteButtonHtml}`;
-        
+
         containerElement.appendChild(newItem);
 
         const button = newItem.querySelector('.three-state-button');
@@ -1255,10 +1261,10 @@
 
         if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
              const totalItems = structure.length;
-            const itemsPerGroup = Math.floor(totalItems / 5); 
+            const itemsPerGroup = Math.floor(totalItems / 5);
             let remainder = totalItems % 5;
             let currentIndex = 0;
-            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review']; 
+            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review'];
             groupKeys.forEach(key => {
                 let numToTake = itemsPerGroup + (remainder > 0 ? 1 : 0);
                 const chunk = structure.slice(currentIndex, currentIndex + numToTake);
@@ -1297,7 +1303,7 @@
             const leverageInput = item.querySelector('.leverage-input');
             if (btn) {
                 type = btn.dataset.type;
-            } else if (dropdown) { 
+            } else if (dropdown) {
                 type = 'dd';
             } else if (charInput) {
                 type = charInput.classList.contains('char-input-long') ? '32char' : '7char';
@@ -1327,7 +1333,7 @@
         const activeTemplate = localStorage.getItem('active_template');
         if (activeTemplate) { select.value = activeTemplate; }
     }
-    
+
     function saveTemplate() {
         const nameInput = document.getElementById('template-name-input');
         const name = nameInput.value.trim();
@@ -1388,7 +1394,7 @@
     async function uploadTemplate(event) {
         const file = event.target.files[0];
         if (!file) return;
-        
+
         const reader = new FileReader();
         reader.onload = async function(e) {
             try {
@@ -1407,7 +1413,7 @@
         reader.readAsText(file);
         event.target.value = '';
     }
-    
+
     function readFileAsText(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1464,22 +1470,22 @@
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
             const margin = 15;
             const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
-            
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const text = await readFileAsText(file);
                 if (i > 0) { doc.addPage(); }
                 let y = margin;
-                
+
                 doc.setFontSize(12);
                 doc.setFont('helvetica', 'bold');
                 doc.text(`File: ${file.name}`, margin, y);
                 y += 10;
-                
+
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
                 const textLines = doc.splitTextToSize(text, maxWidth);
-                
+
                 doc.text(textLines, margin, y);
             }
             doc.save('Merged_Files.pdf');
@@ -1491,7 +1497,7 @@
             event.target.value = '';
         }
     }
-    
+
     async function mergePdfFiles(event) {
         const files = event.target.files;
         if (!files.length) return;
@@ -1546,7 +1552,7 @@
         const now = new Date();
         const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now);
         const contentTimestamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${dayName} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-        
+
         const headerLines = [
             "Trade No:", `Position opening: ${contentTimestamp}`, "Position closing:",
             "Profit amount in USD:", "Margin-based profit percentage:", "Loss amount in USD:", "Margin-based loss percentage:"
@@ -1598,15 +1604,15 @@
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-        
+
         const margin = 15;
         const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
-        
+
         doc.setFont('Courier', 'normal');
         doc.setFontSize(10);
-        
+
         const textLines = doc.splitTextToSize(fullContent, maxWidth);
-        
+
         const pageHeight = doc.internal.pageSize.getHeight() - margin;
         let y = margin;
         const lineHeight = 5;
@@ -1619,7 +1625,7 @@
             doc.text(line, margin, y);
             y += lineHeight;
         });
-        
+
         for (const key in screenshotData) {
             if (screenshotData[key]) {
                 try {
@@ -1631,7 +1637,7 @@
                     });
 
                     const img_dimensions = await getImageDimensions(screenshotData[key]);
-                    
+
                     doc.addPage();
                     doc.setFontSize(12);
                     doc.text(screenshotTitles[key], margin, margin);
@@ -1698,15 +1704,26 @@
         const listItems = document.querySelectorAll('#checklist-container .checklist-item');
         let summaryContent = "";
 
-        const groupHeaders = document.querySelectorAll('.trade-group-header');
+        const tabLinks = document.querySelectorAll('.tab-link');
         const itemsByGroup = {};
-        groupHeaders.forEach(h => itemsByGroup[h.textContent] = []);
+        tabLinks.forEach(link => {
+            const tabName = link.textContent;
+            const tabId = link.getAttribute('data-tab');
+            const tabContent = document.getElementById(tabId);
+            if (tabContent.querySelector('.checklist-item, .screenshot-row, #comments-input')) {
+                itemsByGroup[tabName] = [];
+            }
+        });
 
         listItems.forEach(item => {
-            const groupContainer = item.closest('.trade-group');
-            if (!groupContainer) return;
-            const groupHeader = groupContainer.querySelector('.trade-group-header').textContent;
-            
+            const tabContent = item.closest('.tab-content');
+            if (!tabContent) return;
+
+            const tabId = tabContent.id;
+            const tabLink = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
+            if (!tabLink) return;
+
+            const groupName = tabLink.textContent;
             const text = item.querySelector('.item-text').textContent;
             let value = "";
             const itemButton = item.querySelector('.three-state-button');
@@ -1742,8 +1759,8 @@
                 value = leverageInput.value;
             }
 
-            if(itemsByGroup[groupHeader]) {
-                 itemsByGroup[groupHeader].push(`${text}: ${value}`);
+            if(itemsByGroup[groupName]) {
+                 itemsByGroup[groupName].push(`${text}: ${value}`);
             }
         });
 
@@ -1770,6 +1787,20 @@
             themeToggle.checked = true;
         }
 
+        // Tab functionality
+        const tabsContainer = document.querySelector('.tabs');
+        tabsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-link')) {
+                const tabId = e.target.getAttribute('data-tab');
+
+                document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                e.target.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            }
+        });
+
         // Initial checklist load
         const activeTemplateName = localStorage.getItem('active_template');
         let initialStructure = defaultTemplate;
@@ -1780,29 +1811,19 @@
             }
         }
         buildChecklistFromStructure(initialStructure);
-        
+
         populateTemplateDropdown();
 
         // SortableJS initialization for multiple groups
         const checklists = document.querySelectorAll('.checklist-group-items');
         checklists.forEach(list => {
             new Sortable(list, {
-                group: 'shared-checklist', 
+                group: 'shared-checklist',
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 onEnd: function() {
                     updateSummaryText();
                 }
-            });
-        });
-
-        // Main content collapsible functionality
-        const mainCollapsibleHeaders = document.querySelectorAll('.trade-group-header');
-        mainCollapsibleHeaders.forEach(header => {
-            header.addEventListener('click', function() {
-                const parentGroup = this.parentElement;
-                const isNowActive = parentGroup.classList.toggle('active');
-                this.setAttribute('aria-expanded', isNowActive);
             });
         });
 
@@ -1834,7 +1855,7 @@
             const key = row.dataset.key;
             const input = row.querySelector('.screenshot-input');
             const pasteBtn = row.querySelector('.paste-button');
-            
+
             input.addEventListener('change', (e) => processImageFile(e.target.files[0], key));
             pasteBtn.addEventListener('click', () => pasteFromClipboard(key));
             row.addEventListener('paste', (e) => handlePasteEvent(e, key));
@@ -1846,7 +1867,7 @@
         document.getElementById('delete-template-btn').addEventListener('click', deleteTemplate);
         document.getElementById('download-template-btn').addEventListener('click', downloadTemplate);
         document.getElementById('upload-template-input').addEventListener('change', uploadTemplate);
-        
+
         // File Merging Buttons
         document.getElementById('merge-txt-input').addEventListener('change', mergeTxtFiles);
         document.getElementById('merge-pdf-input').addEventListener('change', mergeTxtFilesAsPdf);
@@ -1858,10 +1879,6 @@
         document.getElementById('download-png-btn').addEventListener('click', downloadEntryAsPng);
         document.getElementById('download-pdf-btn').addEventListener('click', downloadEntryAsPdf);
         document.getElementById('reset-values-btn').addEventListener('click', resetAllValues);
-        
-        // Global Action Buttons
-        document.getElementById('expand-all-btn').addEventListener('click', () => toggleAllMainGroups(true));
-        document.getElementById('collapse-all-btn').addEventListener('click', () => toggleAllMainGroups(false));
 
         loadPersistentValues();
     });
