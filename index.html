@@ -293,6 +293,7 @@
         .char-input, .leverage-input { text-align: center; }
         .char-input { width: 80px; }
         .char-input-long { width: 200px; }
+        .char-input-2000 { width: 200px; }
         .leverage-input { width: 45px; }
 
         .money-input-container {
@@ -1269,6 +1270,7 @@
             case 'money': controlHtml = `<div class="money-input-container"><input type="text" class="money-input dollars" placeholder="0" maxlength="7" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"><span>,</span><input type="text" class="money-input cents" placeholder="00" maxlength="2" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"></div>`; break;
             case 'leverage': controlHtml = `<input type="text" class="leverage-input" maxlength="3" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}">`; break;
             case 'money12': controlHtml = `<div class="money-input-container"><input type="text" class="money-input dollars" placeholder="0" maxlength="7" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"><span>.</span><input type="text" class="money-input cents" placeholder="000000000000" maxlength="12" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"></div>`; break;
+            case '2000char': controlHtml = `<input type="text" class="char-input-2000" maxlength="2000" ${onInputHandler}>`; break;
             case 'datetime':
                 const years = [2025, 2026, 2027, 2028];
                 const yearOptions = years.map(y => `<option value="${y}">${y}</option>`).join('');
