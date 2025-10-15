@@ -955,55 +955,37 @@
             'UTC-12: International Date Line West'
         ]},
         // Pre-Trade
-        { text: "Instrument / Pairs", type: "32char", deletable: true },
-        { text: "Macro Market", type: "np", deletable: true },
-        { text: "News", type: "np", deletable: true },
-        { text: "Session", type: "dd", deletable: true, options: ["New York", "Asia", "London"] },
-        { text: "Levels", type: "yn", deletable: true },
-        // Mid-Trade
+        { text: "Instrument / Pairs / Symbol", type: "32char", deletable: true },
         { text: "Trend", type: "yn", deletable: true },
         { text: "Volume/CVD", type: "yn", deletable: true },
         { text: "Momentum", type: "yn", deletable: true },
-        // Post-Trade
         { text: "RSI", type: "7char", deletable: true },
         { text: "Plan/Setup", type: "yn", deletable: true },
-        { text: "Long/Short", type: "ls", deletable: false },
-        { text: "Margin in USD", type: "money", deletable: false },
-        // Execution
-        { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
-        { text: "Entry Date/Local Time", type: "32char", deletable: true },
-        { text: "Exit Date/Local Time", type: "32char", deletable: true },
-        { text: "Time in Trade", type: "32char", deletable: true },
-        { text: "Setup Grade", type: "dd", deletable: true, options: ["A", "B", "C", "D", "F"] },
-        { text: "Confidence", type: "dd", deletable: true, options: ["High", "Medium", "Low"] },
-        { text: "Session", type: "dd", deletable: true, options: ["NY Pre", "NY Open", "NY Lunch", "NY Afternoon", "ASIA", "London", "Weekend", "Holiday", "Between Sessions"] },
-        { text: "Market Environment", type: "dd", deletable: true, options: ["Trend (Up)", "Trend (Down)", "Range", "Choppy"] },
-        { text: "Bias", type: "dd", deletable: true, options: ["Long", "Short", "Neutral"] },
-        { text: "News", type: "dd", deletable: true, options: ["Jobs (NFP or other)", "CPI/PPI/Inflation", "FOMC / Fed Rates", "Fed Speakers", "GDP", "Retail Sales", "ISM / PMI", "Big Earnings", "OPEC / Oil News", "Treasury Yields / Auction", "Breaking News", "Regulatory Headlines", "Geopolitical Events", "Black Swan Event", "Other", "None"] },
-        { text: "Symbol", type: "dd", deletable: true, options: ["AAVEUSDT", "ADAUSDT", "AVAXUSDT", "BTCUSDT", "DOGEUSDT", "ETHUSDT", "GOLD", "LINKUSDT", "OIL", "QQQ", "SILVER", "SOLUSDT", "SPY", "SUIUSDT", "TONUSDT", "XRPUSDT", ""] },
-        { text: "Setup Type", type: "dd", deletable: true, options: ["Breakout", "Reversal", "Continuation", "Reversion", "SFP/Sweep", "VWAP Bounce", "Diagonal Break", "Range Play", "Reclaim", "Retest", "S/R Bounce (H/D)"] },
-        { text: "Direction", type: "dd", deletable: true, options: ["Long", "Short"] },
-        { text: "Entry Price", type: "money", deletable: true },
-        { text: "Stop Loss", type: "money", deletable: true },
-        { text: "Target Price", type: "money", deletable: true },
-        { text: "Exit Price", type: "money", deletable: true },
-        { text: "Exit Type", type: "dd", deletable: true, options: ["Stop", "Target", "Manual", "Trail", "Breakeven", "Time Stop", "Other"] },
-        { text: "Exit Reason", type: "dd", deletable: true, options: ["Signal Invalidation", "Volume Divergence", "Time-based Exit", "Emotional", "Took Profits Early", "Other", "Profit/Stop/Target", "Momentum Loss", "Resistance"] },
-        { text: "Filled Position", type: "money", deletable: true },
-        { text: "Leverage", type: "leverage", deletable: true },
-        { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
-        { text: "Deposit/(Withdrawal) [Optional]", type: "money", deletable: true },
-        { text: "System Adherence", type: "dd", deletable: true, options: ["Followed", "Minor Deviation", "Major Deviation"] },
-        { text: "Mistake Tag", type: "dd", deletable: true, options: ["FOMO Entry", "Late Entry", "Early Entry", "Wrong Bias", "Impulse Trade", "News Chase", "Over-Sized", "Under-Sized", "No Stop", "Loose Stop", "Moved Stop (Too Wide)", "Moved Stop (Too Soon)", "Over-Leveraged", "Early Exit", "Cut Winner", "Held Too Long", "Exit on Emotion", "Overtrading", "Missed Setup", "Rule Break", "Revenge Trade", "Tilt / Emotional", "Choppy Conditions"] },
-        { text: "Deviation Notes", type: "32char", deletable: true },
-        { text: "Screenshot Link", type: "32char", deletable: true },
         { text: "Entry Emotion", type: "dd", deletable: true, options: ["Confident", "Uncertain", "FOMO", "Revenge", "Calm", "Anxious", "Frustrated", "Satisfied", "Tired", "Real Life Stress", "Sick"] },
-        { text: "Exit Emotion", type: "dd", deletable: true, options: ["Confident", "Uncertain", "FOMO", "Revenge", "Calm", "Anxious", "Frustrated", "Satisfied", "Tired", "Real Life Stress", "Sick"] },
-        { text: "Notes/Lesson Learned", type: "32char", deletable: true },
-        // Review Notes
+        { text: "Pre-Trade Screenshot Link", type: "2000char", deletable: true },
+        { text: "Limit Order Screenshot Link", type: "2000char", deletable: true },
+        // Execution
+        { text: "Margin in USD", type: "money", deletable: false },
+        { text: "Triggered Limit Order Screenshot", type: "32char", deletable: true },
+        { text: "Executed Market Order Screenshot", type: "32char", deletable: true },
+        { text: "Account", type: "dd", deletable: true, options: ["BYDFi", "MEXC", "Prop"] },
         { text: "Leverage", type: "leverage", deletable: true },
-        { text: "Sleep quality", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
-        { text: "Mood", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] }
+        { text: "Entry Date/Local Time", type: "datetime", deletable: true },
+        { text: "Exit Date/Local Time", type: "datetime", deletable: true },
+        { text: "Entry Price", type: "money12", deletable: true },
+        { text: "Stop Loss", type: "money12", deletable: true },
+        { text: "Target Price", type: "money12", deletable: true },
+        { text: "Exit Price", type: "money12", deletable: true },
+        { text: "Filled Position Size", type: "money", deletable: true },
+        // Mid-Trade
+        { text: "Stop-Loss and/or TP Adjusted Screenshot Link", type: "2000char", deletable: true },
+        // Post-Trade
+        { text: "Outcome", type: "dd", deletable: true, options: ["Win", "Loss", "Breakeven"] },
+        { text: "Deposit / Withdrawal", type: "money", deletable: true },
+        { text: "Position Closed Screenshot Link", type: "2000char", deletable: true },
+        // Review Notes
+        { text: "Sleep Quality at Exit", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] },
+        { text: "Mood at Exit", type: "dd", deletable: true, options: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10] }
     ];
 
     let screenshotData = {
@@ -1286,6 +1268,24 @@
             case '32char': controlHtml = `<input type="text" class="char-input-long" maxlength="32" ${onInputHandler}>`; break;
             case 'money': controlHtml = `<div class="money-input-container"><input type="text" class="money-input dollars" placeholder="0" maxlength="7" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"><span>,</span><input type="text" class="money-input cents" placeholder="00" maxlength="2" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"></div>`; break;
             case 'leverage': controlHtml = `<input type="text" class="leverage-input" maxlength="3" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}">`; break;
+            case 'money12': controlHtml = `<div class="money-input-container"><input type="text" class="money-input dollars" placeholder="0" maxlength="7" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"><span>.</span><input type="text" class="money-input cents" placeholder="000000000000" maxlength="12" oninput="validateNumericInput(this); updateSummaryText(); ${isPersistent ? 'savePersistentValues();' : ''}"></div>`; break;
+            case 'datetime':
+                const years = [2025, 2026, 2027, 2028];
+                const yearOptions = years.map(y => `<option value="${y}">${y}</option>`).join('');
+                const monthOptions = Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+                const dayOptions = Array.from({length: 31}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+                const hourOptions = Array.from({length: 24}, (_, i) => `<option value="${i}">${i}</option>`).join('');
+                const minuteOptions = Array.from({length: 60}, (_, i) => `<option value="${String(i).padStart(2, '0')}">${String(i).padStart(2, '0')}</option>`).join('');
+                const secondOptions = Array.from({length: 60}, (_, i) => `<option value="${String(i).padStart(2, '0')}">${String(i).padStart(2, '0')}</option>`).join('');
+                controlHtml = `
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${monthOptions}</select>
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${dayOptions}</select>
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${yearOptions}</select>
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${hourOptions}</select>
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${minuteOptions}</select>
+                    <select class="dropdown date-dropdown" ${onChangeHandler}>${secondOptions}</select>
+                `;
+                break;
         }
         const deleteButtonHtml = deletable ? `<button class="delete-btn">×</button>` : '';
         newItem.innerHTML = `<span class="item-text" contenteditable="true">${text}</span>${controlHtml}${deleteButtonHtml}`;
@@ -1309,45 +1309,30 @@
         };
         Object.values(groupContainers).forEach(c => c.innerHTML = '');
 
-        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs');
-        const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Trend') - personalInfoCount;
-        const midTradeCount = defaultTemplate.findIndex(item => item.text === 'RSI') - (personalInfoCount + preTradeCount);
-        const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Outcome') - (personalInfoCount + preTradeCount + midTradeCount);
-        const executionCount = defaultTemplate.findIndex(item => item.text === 'Leverage') - (personalInfoCount + preTradeCount + midTradeCount + postTradeCount);
+        const personalInfoCount = defaultTemplate.findIndex(item => item.text === 'Instrument / Pairs / Symbol');
+        const preTradeCount = defaultTemplate.findIndex(item => item.text === 'Margin in USD') - personalInfoCount;
+        const executionCount = defaultTemplate.findIndex(item => item.text === 'Stop-Loss and/or TP Adjusted Screenshot Link') - (personalInfoCount + preTradeCount);
+        const midTradeCount = defaultTemplate.findIndex(item => item.text === 'Outcome') - (personalInfoCount + preTradeCount + executionCount);
+        const postTradeCount = defaultTemplate.findIndex(item => item.text === 'Sleep Quality at Exit') - (personalInfoCount + preTradeCount + executionCount + midTradeCount);
 
         const structureGroups = {
             personal: structure.slice(0, personalInfoCount),
             pre: structure.slice(personalInfoCount, personalInfoCount + preTradeCount),
-            mid: structure.slice(personalInfoCount + preTradeCount, personalInfoCount + preTradeCount + midTradeCount),
-            post: structure.slice(personalInfoCount + preTradeCount + midTradeCount, personalInfoCount + preTradeCount + midTradeCount + postTradeCount),
-            execution: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount, personalInfoCount + preTradeCount + midTradeCount + postTradeCount + executionCount),
-            review: structure.slice(personalInfoCount + preTradeCount + midTradeCount + postTradeCount + executionCount)
+            execution: structure.slice(personalInfoCount + preTradeCount, personalInfoCount + preTradeCount + executionCount),
+            mid: structure.slice(personalInfoCount + preTradeCount + executionCount, personalInfoCount + preTradeCount + executionCount + midTradeCount),
+            post: structure.slice(personalInfoCount + preTradeCount + executionCount + midTradeCount, personalInfoCount + preTradeCount + executionCount + midTradeCount + postTradeCount),
+            review: structure.slice(personalInfoCount + preTradeCount + executionCount + midTradeCount + postTradeCount)
         };
 
-        if (structure.length !== defaultTemplate.length || personalInfoCount === -1) {
-             const totalItems = structure.length;
-            const itemsPerGroup = Math.floor(totalItems / 5);
-            let remainder = totalItems % 5;
-            let currentIndex = 0;
-            const groupKeys = ['personal', 'pre', 'mid', 'post', 'review'];
-            groupKeys.forEach(key => {
-                let numToTake = itemsPerGroup + (remainder > 0 ? 1 : 0);
-                const chunk = structure.slice(currentIndex, currentIndex + numToTake);
-                chunk.forEach(itemData => createRow(itemData, groupContainers[key]));
-                currentIndex += numToTake;
-                if (remainder > 0) remainder--;
-            });
-        } else {
-             for (const groupKey in structureGroups) {
-                if(groupContainers[groupKey]) {
-                    structureGroups[groupKey].forEach(itemData => {
-                        const originalItem = defaultTemplate.find(i => i.text === itemData.text);
-                        if (originalItem && originalItem.options) {
-                            itemData.options = originalItem.options;
-                        }
-                        createRow(itemData, groupContainers[groupKey]);
-                    });
-                }
+        for (const groupKey in structureGroups) {
+            if(groupContainers[groupKey]) {
+                structureGroups[groupKey].forEach(itemData => {
+                    const originalItem = defaultTemplate.find(i => i.text === itemData.text);
+                    if (originalItem && originalItem.options) {
+                        itemData.options = originalItem.options;
+                    }
+                    createRow(itemData, groupContainers[groupKey]);
+                });
             }
         }
         updateSummaryText();
